@@ -1,4 +1,4 @@
-﻿//
+//
 // ================================================
 // | Grafica pe calculator                        |
 // =====================================================
@@ -47,7 +47,7 @@ glm::mat4
 
 int codCol;							//	Variabila ce determina schimbarea culorii pixelilor in shader;
 float angle = 0;					//	Unghiul de rotire al patratului;
-float tx = 0; float ty = 0;			//	Coordonatele de translatie ale patratului pe Ox si Oy;
+float tx = 0; float ty = -200;			//	Coordonatele de translatie ale patratului pe Ox si Oy;
 float xMin = -400.f, xMax = 400.f, yMin = -300.f, yMax = 300.f;		//	Variabile pentru proiectia ortogonala;
 
 
@@ -55,12 +55,12 @@ void Move() {
 
 
 	//Aici o sa se miste marcajul și copacii
-	if (ty > -100)
+	if (ty > -300)
 	{
 		ty--;
 	}
 	else
-		ty = 0;
+		ty = -200;
 
 
 	glutPostRedisplay();	//	Actualizare
@@ -105,10 +105,10 @@ void CreateVBO(void)
 
 		//	Varfuri pentru dreptunghi;
 		//	1
-		-10.0f, -50.0f, 0.0f, 1.0f,
-		 10.0f, -50.0f, 0.0f, 1.0f,
-		 10.0f,  50.0f, 0.0f, 1.0f,
-		-10.0f,  50.0f, 0.0f, 1.0f,
+		-10.0f, -400.0f, 0.0f, 1.0f,
+		 10.0f, -400.0f, 0.0f, 1.0f,
+		 10.0f, -300.0f, 0.0f, 1.0f,
+		-10.0f, -300.0f, 0.0f, 1.0f,
 		//	2
 		-10.0f, -50.0f, 0.0f, 1.0f,
 		 10.0f, -50.0f, 0.0f, 1.0f,
@@ -232,10 +232,12 @@ void RenderFunction(void)
 	codCol = 1;								//	Schimbare culoare;
 	glUniform1i(codColLocation, codCol);
 	glDrawArrays(GL_POLYGON, 12, 4);
+	glDrawArrays(GL_POLYGON, 16, 4);
+	glDrawArrays(GL_POLYGON, 20, 4);
 	codCol = 2;								//	Schimbare culoare;
 	glUniform1i(codColLocation, codCol);
 	glEnable(GL_POINT_SMOOTH);				//	Netezirea marginilor punctelor;
-	glDrawArrays(GL_POINTS, 16, 1);
+	glDrawArrays(GL_POINTS, 25, 1);
 	glDisable(GL_POINT_SMOOTH);
 
 	//Margini
