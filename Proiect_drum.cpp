@@ -57,10 +57,10 @@ void Move() {
 	//Aici o sa se miste marcajul și copacii
 	if (ty > -300)
 	{
-		ty--;
+		ty = ty - 0.1;
 	}
 	else
-		ty = -200;
+		ty = 200;
 
 
 	glutPostRedisplay();	//	Actualizare
@@ -115,10 +115,13 @@ void CreateVBO(void)
 		 10.0f,  50.0f, 0.0f, 1.0f,
 		-10.0f,  50.0f, 0.0f, 1.0f,
 		//	3
-		-10.0f, -50.0f, 0.0f, 1.0f,
-		 10.0f, -50.0f, 0.0f, 1.0f,
-		 10.0f,  50.0f, 0.0f, 1.0f,
-		-10.0f,  50.0f, 0.0f, 1.0f,
+		-10.0f, 300.0f, 0.0f, 1.0f,
+		 10.0f, 300.0f, 0.0f, 1.0f,
+		 10.0f, 400.0f, 0.0f, 1.0f,
+		-10.0f, 400.0f, 0.0f, 1.0f,
+
+
+
 		//  Originea;
 		0.0f, 0.0f, 0.0f, 1.0f
 	};
