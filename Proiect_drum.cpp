@@ -30,21 +30,21 @@
 
 //  Identificatorii obiectelor de tip OpenGL;
 GLuint
-	VaoId,
-	VboId,
-	ColorBufferId,
-	ProgramId,
-	EboId,
-	viewLocation,
-	projLocation,
-	myMatrixLocation,
-	matrScaleLocation,
-	matrTranslLocation,
-	matrRotlLocation,
-	codColLocation;
+VaoId,
+VboId,
+ColorBufferId,
+ProgramId,
+EboId,
+viewLocation,
+projLocation,
+myMatrixLocation,
+matrScaleLocation,
+matrTranslLocation,
+matrRotlLocation,
+codColLocation;
 
 GLuint
-	texture;
+texture;
 
 //	Dimensiunile ferestrei de afisare;
 GLfloat
@@ -57,13 +57,14 @@ int codCol;							//	Variabila ce determina schimbarea culorii pixelilor in shad
 float angle = 0;					//	Unghiul de rotire al patratului;
 float tx = 0; float ty = 100;			//	Coordonatele de translatie ale patratului pe Ox si Oy;
 float xMin = -400.f, xMax = 400.f, yMin = -300.f, yMax = 300.f;		//	Variabile pentru proiectia ortogonala;
+GLfloat aux1, aux2 = 800.0f;
 
 
 void Move() {
 	//Aici o sa se miste marcajul și copacii
-	if (ty > -100)
+	if (ty > -120)
 	{
-		ty = ty - 1;
+		ty = ty - 5;
 	}
 	else
 		ty = 100;
@@ -108,16 +109,66 @@ void CreateVBO(void)
 {
 	//  Coordonatele varfurilor;
 	GLfloat Vertices[] = {
-		 //	Varfuri pentru dreptunghi;
-		 //	1
-		 -400.0f, -300.0f, 0.0f, 1.0f,	0.0f, 0.0f, 0.0f,	0.0f, 0.0f,
-		  400.0f, -300.0f, 0.0f, 1.0f,	0.0f, 0.0f, 0.0f,	1.0f, 0.0f,
-		  400.0f,  300.0f, 0.0f, 1.0f,	0.0f, 0.0f, 0.0f,	1.0f, 1.0f,
-		 -400.0f,  300.0f, 0.0f, 1.0f,	0.0f, 0.0f, 0.0f,	0.0f, 1.0f,	 
+		//	Varfuri pentru dreptunghi;
+		//	1
+		-800.0f, -300.0f, 0.0f, 1.0f,	0.0f, 0.0f, 0.0f,	0.0f, 0.0f,
+		 800.0f, -300.0f, 0.0f, 1.0f,	0.0f, 0.0f, 0.0f,	1.0f, 0.0f,
+		 800.0f,  300.0f, 0.0f, 1.0f,	0.0f, 0.0f, 0.0f,	1.0f, 1.0f,
+		-800.0f,  300.0f, 0.0f, 1.0f,	0.0f, 0.0f, 0.0f,	0.0f, 1.0f,
+
+		0.265f, 0.714f, 0.0f, 1.0f,
+		0.195f, 0.695f, 0.0f, 1.0f,
+		0.1914f, 0.68996f, 0.0f, 1.0f,
+		0.1575f, 0.66845f, 0.0f, 1.0f,
+		0.1532f, 0.66124f, 0.0f, 1.0f,
+		0.1444f, 0.6149f, 0.0f, 1.0f,
+		0.14446f, 0.4586f, 0.0f, 1.0f,
+		0.12836f, 0.4483f, 0.0f, 1.0f,
+		0.12615f, 0.4354f, 0.0f, 1.0f,
+		0.1449f, 0.4401f, 0.0f, 1.0f,
+		0.1447f, 0.3579f, 0.0f, 1.0f,
+		0.142f, 0.3534f, 0.0f, 1.0f,
+		0.142f, 0.336f, 0.0f, 1.0f,
+		0.14477f, 0.32993f, 0.0f, 1.0f,
+		0.1451f, 0.2861f, 0.0f, 1.0f,
+		0.1433f, 0.2661f, 0.0f, 1.0f,
+		0.1434f, 0.224f, 0.0f, 1.0f,
+		0.144f, 0.214f, 0.0f, 1.0f,
+		0.154f, 0.172f, 0.0f, 1.0f,
+		0.1595f, 0.1533f, 0.0f, 1.0f,
+		0.16574f, 0.1403f, 0.0f, 1.0f,
+		0.175f, 0.1299f, 0.0f, 1.0f,
+		0.1925f, 0.1237f, 0.0f, 1.0f,
+		0.21605f, 0.1196f, 0.0f, 1.0f,
+		0.2655f, 0.1161f, 0.0f, 1.0f,
+		0.30722f, 0.1196f, 0.0f, 1.0f,
+		0.33835f, 0.1237f, 0.0f, 1.0f,
+		0.356f, 0.1299f, 0.0f, 1.0f,
+		0.36556f, 0.1403f, 0.0f, 1.0f,
+		0.37186f, 0.1533f, 0.0f, 1.0f,
+		0.3767f, 0.172f, 0.0f, 1.0f,
+		0.3864f, 0.214f, 0.0f, 1.0f,
+		0.3877f, 0.224f, 0.0f, 1.0f,
+		0.388f, 0.2661f, 0.0f, 1.0f,
+		0.3863f, 0.2861f, 0.0f, 1.0f,
+		0.3863f, 0.32993f, 0.0f, 1.0f,
+		0.38955f, 0.336f, 0.0f, 1.0f,
+		0.38965f, 0.3534f, 0.0f, 1.0f,
+		0.3863f, 0.3579f, 0.0f, 1.0f,
+		0.386f, 0.4401f, 0.0f, 1.0f,
+		0.40726f, 0.4354f, 0.0f, 1.0f,
+		0.4036f, 0.4483f, 0.0f, 1.0f,
+		0.386f, 0.4586f, 0.0f, 1.0f,
+		0.3867f, 0.6149f, 0.0f, 1.0f,
+		0.37745f, 0.6612f, 0.0f, 1.0f,
+		0.374f, 0.6684f, 0.0f, 1.0f,
+		0.3398f, 0.6894f, 0.0f, 1.0f,
+		0.3357f, 0.695f, 0.0f, 1.0f,
+
 	};
 
 	GLuint Indices[] = {
-	  0, 1, 2, 3, 0
+	  0, 1, 2, 3, 0,
 	};
 
 	//  Transmiterea datelor prin buffere;
@@ -130,9 +181,9 @@ void CreateVBO(void)
 	//  Se creeaza / se leaga un VAO (Vertex Array Object) - util cand se utilizeaza mai multe VBO;
 	glGenVertexArrays(1, &VaoId);                                                   //  Generarea VAO si indexarea acestuia catre variabila VaoId;
 	glBindVertexArray(VaoId);
-     //  Punctele sunt "copiate" in bufferul curent;
-	
-	//	Se creeaza un buffer pentru INDICI;
+	//  Punctele sunt "copiate" in bufferul curent;
+
+   //	Se creeaza un buffer pentru INDICI;
 	glGenBuffers(1, &EboId);														//  Generarea bufferului si indexarea acestuia catre variabila EboId;
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EboId);									//  Setarea tipului de buffer - atributele varfurilor;
 	glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(Indices), Indices, GL_STATIC_DRAW);
@@ -141,7 +192,7 @@ void CreateVBO(void)
 	//  Se asociaza atributul (0 = coordonate) pentru shader;
 	glEnableVertexAttribArray(0);
 	glVertexAttribPointer(0, 4, GL_FLOAT, GL_FALSE, 9 * sizeof(GLfloat), (GLvoid*)0);
-	
+
 	//  Se asociaza atributul (1 =  culoare) pentru shader;
 	glEnableVertexAttribArray(1);
 	glVertexAttribPointer(1, 4, GL_FLOAT, GL_FALSE, 9 * sizeof(GLfloat), (GLvoid*)(4 * sizeof(GLfloat)));
@@ -186,7 +237,7 @@ void Cleanup(void)
 void Initialize(void)
 {
 	glClearColor(0.0f, 0.64f, 0.0f, 1.0f);		//  Culoarea de fond a ecranului;
-									//  Trecerea datelor de randare spre bufferul folosit de shadere;
+	//  Trecerea datelor de randare spre bufferul folosit de shadere;
 	CreateShaders();							//  Initilizarea shaderelor;
 	//	Instantierea variabilelor uniforme pentru a "comunica" cu shaderele;
 	myMatrixLocation = glGetUniformLocation(ProgramId, "myMatrix");
@@ -208,14 +259,14 @@ void RenderFunction(void)
 	//	Matrici pentru transformari;
 	resizeMatrix = glm::ortho(xMin, xMax, yMin, yMax);
 	matrTransl = glm::translate(glm::mat4(1.0f), glm::vec3(tx, ty, 0.0)); // drum
-	//matrTransl1 = glm::translate(glm::mat4(1.0f), glm::vec3(tx, ty, 0.0));// masini
+	matrTransl1 = glm::translate(glm::mat4(1.0f), glm::vec3(tx, ty, 0.0));// masini
 	angle = 90.0f; // Setăm unghiul la 90 de grade (spre dreapta)
 	matrRot = glm::rotate(glm::mat4(1.0f), glm::radians(angle), glm::vec3(0.0f, 0.0f, 1.0f));
 	//myMatrix = resizeMatrix;
 	myMatrix = resizeMatrix * matrTransl * matrRot;
 
 	CreateVBO();
-	
+
 	LoadTexture("drum.jpeg");
 	glActiveTexture(GL_TEXTURE0);
 	glBindTexture(GL_TEXTURE_2D, texture);
@@ -223,10 +274,16 @@ void RenderFunction(void)
 	//	Matricea pentru elementele care isi schimba pozitia;
 	glUniform1i(glGetUniformLocation(ProgramId, "myTexture"), 0);
 	glUniformMatrix4fv(myMatrixLocation, 1, GL_FALSE, &myMatrix[0][0]);
-	
+
 
 	glDrawArrays(GL_QUADS, 0, 4);
+
+	myMatrix = resizeMatrix * matrTransl1 * matrRot;
+	glUniform1i(glGetUniformLocation(ProgramId, "myTexture"), 0);
+	glUniformMatrix4fv(myMatrixLocation, 1, GL_FALSE, &myMatrix[0][0]);
 	
+
+
 
 	glutSwapBuffers();	//	Inlocuieste imaginea deseneata in fereastra cu cea randata; 
 	glFlush();			//  Asigura rularea tuturor comenzilor OpenGL apelate anterior;
