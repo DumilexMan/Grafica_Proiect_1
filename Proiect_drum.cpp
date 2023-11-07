@@ -60,12 +60,10 @@ float xMin = -400.f, xMax = 400.f, yMin = -300.f, yMax = 300.f;		//	Variabile pe
 
 
 void Move() {
-
-
 	//Aici o sa se miste marcajul și copacii
 	if (ty > -100)
 	{
-		ty = ty - 2;
+		ty = ty - 1;
 	}
 	else
 		ty = 100;
@@ -87,7 +85,7 @@ void LoadTexture(const char* photoPath)
 
 	int width, height;
 	unsigned char* image = SOIL_load_image(photoPath, &width, &height, 0, SOIL_LOAD_RGB);
-	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, width, height, 0, GL_RGBA, GL_UNSIGNED_BYTE, image);
+	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, width, height, 0, GL_RGB, GL_UNSIGNED_BYTE, image);
 	glGenerateMipmap(GL_TEXTURE_2D);
 
 	SOIL_free_image_data(image);
@@ -110,51 +108,43 @@ void CreateVBO(void)
 {
 	//  Coordonatele varfurilor;
 	GLfloat Vertices[] = {
-		
-		
-		
-
-	
-		
-
 		 //	Varfuri pentru dreptunghi;
 		 //	1
-		 -200.0f, -100.0f, 0.0f, 1.0f,	0.0f, 0.0f, 0.0f,	0.0f, 0.0f,
-		  200.0f, -100.0f, 0.0f, 1.0f,	0.0f, 0.0f, 0.0f,	1.0f, 0.0f,
-		  200.0f,  100.0f, 0.0f, 1.0f,	0.0f, 0.0f, 0.0f,	1.0f, 1.0f,
-		 -200.0f,  100.0f, 0.0f, 1.0f,	0.0f, 0.0f, 0.0f,	0.0f, 1.0f,
-		 
-		 
+		 -400.0f, -300.0f, 0.0f, 1.0f,	0.0f, 0.0f, 0.0f,	0.0f, 0.0f,
+		  400.0f, -300.0f, 0.0f, 1.0f,	0.0f, 0.0f, 0.0f,	1.0f, 0.0f,
+		  400.0f,  300.0f, 0.0f, 1.0f,	0.0f, 0.0f, 0.0f,	1.0f, 1.0f,
+		 -400.0f,  300.0f, 0.0f, 1.0f,	0.0f, 0.0f, 0.0f,	0.0f, 1.0f,	 
 	};
 
 	GLuint Indices[] = {
-	  0, 1, 2,
-	  0, 2, 3,
+	  0, 1, 2, 3, 0
 	};
 
 	//  Transmiterea datelor prin buffere;
 
-	//  Se creeaza / se leaga un VAO (Vertex Array Object) - util cand se utilizeaza mai multe VBO;
-	glGenVertexArrays(1, &VaoId);                                                   //  Generarea VAO si indexarea acestuia catre variabila VaoId;
-	glBindVertexArray(VaoId);
-
 	//  Se creeaza un buffer pentru VARFURI;
 	glGenBuffers(1, &VboId);                                                        //  Generarea bufferului si indexarea acestuia catre variabila VboId;
 	glBindBuffer(GL_ARRAY_BUFFER, VboId);                                           //  Setarea tipului de buffer - atributele varfurilor;
-	glBufferData(GL_ARRAY_BUFFER, sizeof(Vertices), Vertices, GL_STATIC_DRAW);      //  Punctele sunt "copiate" in bufferul curent;
-	
-	//  Se asociaza atributul (0 = coordonate) pentru shader;
-	glEnableVertexAttribArray(0);
-	glVertexAttribPointer(0, 4, GL_FLOAT, GL_FALSE, 0, 0);
+	glBufferData(GL_ARRAY_BUFFER, sizeof(Vertices), Vertices, GL_STATIC_DRAW);
 
+	//  Se creeaza / se leaga un VAO (Vertex Array Object) - util cand se utilizeaza mai multe VBO;
+	glGenVertexArrays(1, &VaoId);                                                   //  Generarea VAO si indexarea acestuia catre variabila VaoId;
+	glBindVertexArray(VaoId);
+     //  Punctele sunt "copiate" in bufferul curent;
+	
 	//	Se creeaza un buffer pentru INDICI;
 	glGenBuffers(1, &EboId);														//  Generarea bufferului si indexarea acestuia catre variabila EboId;
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EboId);									//  Setarea tipului de buffer - atributele varfurilor;
 	glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(Indices), Indices, GL_STATIC_DRAW);
+
+
+	//  Se asociaza atributul (0 = coordonate) pentru shader;
+	glEnableVertexAttribArray(0);
+	glVertexAttribPointer(0, 4, GL_FLOAT, GL_FALSE, 9 * sizeof(GLfloat), (GLvoid*)0);
 	
 	//  Se asociaza atributul (1 =  culoare) pentru shader;
 	glEnableVertexAttribArray(1);
-	glVertexAttribPointer(1, 4, GL_FLOAT, GL_FALSE, 0, 0);
+	glVertexAttribPointer(1, 4, GL_FLOAT, GL_FALSE, 9 * sizeof(GLfloat), (GLvoid*)(4 * sizeof(GLfloat)));
 
 	//  Se asociaza atributul (2 =  texturare) pentru shader;
 	glEnableVertexAttribArray(2);
@@ -177,7 +167,7 @@ void DestroyVBO(void)
 
 	//  Stergerea bufferelor pentru varfuri, culori;
 	glBindBuffer(GL_ARRAY_BUFFER, 0);
-	glDeleteBuffers(1, &ColorBufferId);
+	glDeleteBuffers(1, &EboId);
 	glDeleteBuffers(1, &VboId);
 
 	//  Eliberaea obiectelor de tip VAO;
@@ -195,18 +185,17 @@ void Cleanup(void)
 //  Setarea parametrilor necesari pentru fereastra de vizualizare;
 void Initialize(void)
 {
-	glClearColor(1.0f, 1.0f, 0.0f, 1.0f);		//  Culoarea de fond a ecranului;
-	CreateVBO();								//  Trecerea datelor de randare spre bufferul folosit de shadere;
+	glClearColor(0.0f, 0.64f, 0.0f, 1.0f);		//  Culoarea de fond a ecranului;
+									//  Trecerea datelor de randare spre bufferul folosit de shadere;
 	CreateShaders();							//  Initilizarea shaderelor;
 	//	Instantierea variabilelor uniforme pentru a "comunica" cu shaderele;
-	codColLocation = glGetUniformLocation(ProgramId, "codCol");
 	myMatrixLocation = glGetUniformLocation(ProgramId, "myMatrix");
+	viewLocation = glGetUniformLocation(ProgramId, "view");
+	projLocation = glGetUniformLocation(ProgramId, "projection");
 
 	//viewLocation = glGetUniformLocation(ProgramId, "view");
 	//projLocation = glGetUniformLocation(ProgramId, "projection");
 
-	//	Dreptunghiul "decupat"; 
-	resizeMatrix = glm::ortho(xMin, xMax, yMin, yMax);
 	//	Pentru shaderul de fragmente;
 	glUniform1i(glGetUniformLocation(ProgramId, "myTexture"), 0);
 }
@@ -217,20 +206,26 @@ void RenderFunction(void)
 	glClear(GL_COLOR_BUFFER_BIT);			//  Se curata ecranul OpenGL pentru a fi desenat noul continut;
 
 	//	Matrici pentru transformari;
+	resizeMatrix = glm::ortho(xMin, xMax, yMin, yMax);
 	matrTransl = glm::translate(glm::mat4(1.0f), glm::vec3(tx, ty, 0.0)); // drum
-	matrTransl1 = glm::translate(glm::mat4(1.0f), glm::vec3(tx, ty, 0.0));// masini
-	matrRot = glm::rotate(glm::mat4(1.0f), angle, glm::vec3(0.0, 0.0, 1.0));
+	//matrTransl1 = glm::translate(glm::mat4(1.0f), glm::vec3(tx, ty, 0.0));// masini
+	angle = 90.0f; // Setăm unghiul la 90 de grade (spre dreapta)
+	matrRot = glm::rotate(glm::mat4(1.0f), glm::radians(angle), glm::vec3(0.0f, 0.0f, 1.0f));
+	//myMatrix = resizeMatrix;
+	myMatrix = resizeMatrix * matrTransl * matrRot;
+
+	CreateVBO();
 	
-	LoadTexture("drum.png");
+	LoadTexture("drum.jpeg");
 	glActiveTexture(GL_TEXTURE0);
 	glBindTexture(GL_TEXTURE_2D, texture);
 
 	//	Matricea pentru elementele care isi schimba pozitia;
-	myMatrix = resizeMatrix * matrTransl * matrRot;
-	glUniformMatrix4fv(myMatrixLocation, 1, GL_FALSE, &myMatrix[0][0]);
 	glUniform1i(glGetUniformLocation(ProgramId, "myTexture"), 0);
+	glUniformMatrix4fv(myMatrixLocation, 1, GL_FALSE, &myMatrix[0][0]);
+	
 
-	glDrawElements(GL_LINES, 6, GL_UNSIGNED_INT, 0);
+	glDrawArrays(GL_QUADS, 0, 4);
 	
 
 	glutSwapBuffers();	//	Inlocuieste imaginea deseneata in fereastra cu cea randata; 
@@ -243,7 +238,7 @@ int main(int argc, char* argv[])
 	//  Se initializeaza GLUT si contextul OpenGL si se configureaza fereastra si modul de afisare;
 
 	glutInit(&argc, argv);
-	glutInitDisplayMode(GLUT_DOUBLE | GLUT_RGB);					//	Se folosesc 2 buffere (unul pentru afisare si unul pentru randare => animatii cursive) si culori RGB;
+	glutInitDisplayMode(GLUT_SINGLE | GLUT_RGB);					//	Se folosesc 2 buffere (unul pentru afisare si unul pentru randare => animatii cursive) si culori RGB;
 	glutInitWindowSize(winWidth, winHeight);						//  Dimensiunea ferestrei;
 	glutInitWindowPosition(100, 100);								//  Pozitia initiala a ferestrei;
 	glutCreateWindow("Proiect_drum - OpenGL <<nou>>");		//	Creeaza fereastra de vizualizare, indicand numele acesteia;
@@ -255,8 +250,7 @@ int main(int argc, char* argv[])
 
 	Initialize();							//  Setarea parametrilor necesari pentru fereastra de vizualizare; 
 	glutDisplayFunc(RenderFunction);		//  Desenarea scenei in fereastra;
-	glutIdleFunc(RenderFunction);			//	Asigura rularea continua a randarii;
-	//glutIdleFunc(Move);
+	glutIdleFunc(Move);
 	glutCloseFunc(Cleanup);					//  Eliberarea resurselor alocate de program;
 
 	//  Bucla principala de procesare a evenimentelor GLUT (functiile care incep cu glut: glutInit etc.) este pornita;
