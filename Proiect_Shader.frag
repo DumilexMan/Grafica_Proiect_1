@@ -12,7 +12,7 @@
 
 //	Variabile de intrare (dinspre Shader.vert);
 in vec4 ex_Color;
-in vec2 tex_Coord;
+in vec2 ex_Text_Coord;
 
 //	Variabile de iesire	(spre programul principal);
 out vec4 out_Color;
@@ -22,6 +22,5 @@ uniform sampler2D myTexture;
 //	Actualizeaza culoarea in functie de codCol;
 void main(void)
 {
-	out_Color = mix(texture(myTexture, tex_Coord), ex_Color, 0.2);
+	out_Color = mix(texture(myTexture, ex_Text_Coord), ex_Color, 0.2);
 }
- 
