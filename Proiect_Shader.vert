@@ -29,4 +29,3 @@ void main(void)
     ex_Color = in_Color;
     ex_Text_Coord = vec2(in_Text_Coord.x, 1 - in_Text_Coord.y);
 } 
- 
