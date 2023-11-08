@@ -51,12 +51,12 @@ GLfloat
 winWidth = 800, winHeight = 800;
 //	Variabile catre matricile de transformare;
 glm::mat4
-myMatrix, resizeMatrix, matrTransl, matrTransl1, matrTransl2, matrScale, matrRot, matrRot2, matrTranslMas1, matrTranslMas2;
+myMatrix, resizeMatrix, matrTransl, matrTransl1, matrTransl2, matrScale, matrRot, matrRot2, matrTranslMas1, matrTranslMas2, matrTranslo;
 
 int codCol;							//	Variabila ce determina schimbarea culorii pixelilor in shader;
-float angle = 0, angle1 = 270;					//	Unghiul de rotire al patratului;
+float angle = 0, angle1 = 0;					//	Unghiul de rotire al patratului;
 float tx = 0; float ty = 100;			//	Coordonatele de translatie ale patratului pe Ox si Oy;
-float tx1 = 120; float ty1 = -350;
+float tx1 = 0; float ty1 = 0;
 float xMin = -400.f, xMax = 400.f, yMin = -300.f, yMax = 300.f;		//	Variabile pentru proiectia ortogonala;
 
 
@@ -74,26 +74,26 @@ void Move() {
 }
 
 void ProcessSpecialKeys(int key, int x, int y) {
-	while(key)            //    Procesarea tastelor 'LEFT', 'RIGHT', 'UP', 'DOWN';
+	while (key)            //    Procesarea tastelor 'LEFT', 'RIGHT', 'UP', 'DOWN';
 	{                        //    duce la deplasarea observatorului pe axele Ox si Oy;
 		if (key == GLUT_KEY_LEFT) {
-			//tx1 -= 5;
+			tx1 -= 5;
 			angle1 += 1;
 			break;
 		}
-		
+
 		if (key == GLUT_KEY_RIGHT) {
-			// tx1 += 5;
+			tx1 += 5;
 			angle1 -= 1;
 			break;
 		}
-		
+
 		if (key == GLUT_KEY_UP) {
 			ty1 += 5;
 			break;
 		}
-		
-		if (key == GLUT_KEY_DOWN){
+
+		if (key == GLUT_KEY_DOWN) {
 			ty1 -= 5;
 			break;
 		}
@@ -186,7 +186,7 @@ void CreateVBO(void)
 
 	//  Se asociaza atributul (2 =  texturare) pentru shader;
 	glEnableVertexAttribArray(2);
-	glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, 9 * sizeof(GLfloat), (GLvoid*)(7  * sizeof(GLfloat)));
+	glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, 9 * sizeof(GLfloat), (GLvoid*)(7 * sizeof(GLfloat)));
 }
 
 //  Elimina obiectele de tip shader dupa rulare;
@@ -248,10 +248,11 @@ void RenderFunction(void)
 	matrTransl = glm::translate(glm::mat4(1.0f), glm::vec3(tx, ty, 0.0)); // drum
 	matrTransl1 = glm::translate(glm::mat4(1.0f), glm::vec3(tx1, ty1, 0.0));// masini
 	matrTransl2 = glm::translate(glm::mat4(1.0f), glm::vec3(-tx1, -ty1, 0.0));// masini
+	matrTranslo = glm::translate(glm::mat4(1.0f), glm::vec3(0, 0, 0.0)); // drum
 
 	angle = 270.0f; // Setăm unghiul la 90 de grade (spre dreapta)
 	matrRot = glm::rotate(glm::mat4(1.0f), glm::radians(angle), glm::vec3(0.0f, 0.0f, 1.0f));
-	
+
 	matrRot2 = glm::rotate(glm::mat4(1.0f), glm::radians(angle1), glm::vec3(0.0f, 0.0f, 1.0f));
 
 	//myMatrix = resizeMatrix;
@@ -261,11 +262,11 @@ void RenderFunction(void)
 
 	LoadTexture("drum2.jpg");
 
-	
+
 
 	glActiveTexture(GL_TEXTURE0);
 	glBindTexture(GL_TEXTURE_2D, texture);
-	
+
 
 	//	Matricea pentru elementele care isi schimba pozitia;
 	glUniform1i(glGetUniformLocation(ProgramId, "myTexture"), 0);
@@ -273,23 +274,23 @@ void RenderFunction(void)
 
 
 	glDrawArrays(GL_QUADS, 0, 4);
-	
+
 	glEnable(GL_BLEND);
 	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-	
-	LoadTexture("car11.png");
+
+	LoadTexture("car1.png");
 
 	glActiveTexture(GL_TEXTURE0);
 	glBindTexture(GL_TEXTURE_2D, texture);
-	myMatrix = resizeMatrix * matrTransl1 * matrRot2 * matrTransl2;
+	myMatrix = resizeMatrix * matrRot2 * matrTransl1;
 	glUniform1i(glGetUniformLocation(ProgramId, "myTexture"), 0);
 	glUniformMatrix4fv(myMatrixLocation, 1, GL_FALSE, &myMatrix[0][0]);
-	
+
 	glDrawArrays(GL_QUADS, 4, 4);
 
-	
 
-	
+
+
 
 	glutSwapBuffers();	//	Inlocuieste imaginea deseneata in fereastra cu cea randata; 
 	glFlush();			//  Asigura rularea tuturor comenzilor OpenGL apelate anterior;
