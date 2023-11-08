@@ -48,21 +48,21 @@ texture;
 
 //	Dimensiunile ferestrei de afisare;
 GLfloat
-winWidth = 800, winHeight = 600;
+winWidth = 800, winHeight = 800;
 //	Variabile catre matricile de transformare;
 glm::mat4
-myMatrix, resizeMatrix, matrTransl, matrTransl1, matrTransl2, matrScale, matrRot;
+myMatrix, resizeMatrix, matrTransl, matrTransl1, matrTransl2, matrScale, matrRot, matrRot2, matrTranslMas1, matrTranslMas2;
 
 int codCol;							//	Variabila ce determina schimbarea culorii pixelilor in shader;
-float angle = 0;					//	Unghiul de rotire al patratului;
+float angle = 0, angle1 = 270;					//	Unghiul de rotire al patratului;
 float tx = 0; float ty = 100;			//	Coordonatele de translatie ale patratului pe Ox si Oy;
+float tx1 = 120; float ty1 = -350;
 float xMin = -400.f, xMax = 400.f, yMin = -300.f, yMax = 300.f;		//	Variabile pentru proiectia ortogonala;
-GLfloat aux1, aux2 = 800.0f;
 
 
 void Move() {
 	//Aici o sa se miste marcajul și copacii
-	if (ty > -120)
+	if (ty > -100)
 	{
 		ty = ty - 5;
 	}
@@ -73,20 +73,47 @@ void Move() {
 	glutPostRedisplay();	//	Actualizare
 }
 
+void ProcessSpecialKeys(int key, int x, int y) {
+	while(key)            //    Procesarea tastelor 'LEFT', 'RIGHT', 'UP', 'DOWN';
+	{                        //    duce la deplasarea observatorului pe axele Ox si Oy;
+		if (key == GLUT_KEY_LEFT) {
+			//tx1 -= 5;
+			angle1 += 1;
+			break;
+		}
+		
+		if (key == GLUT_KEY_RIGHT) {
+			// tx1 += 5;
+			angle1 -= 1;
+			break;
+		}
+		
+		if (key == GLUT_KEY_UP) {
+			ty1 += 5;
+			break;
+		}
+		
+		if (key == GLUT_KEY_DOWN){
+			ty1 -= 5;
+			break;
+		}
+	}
+}
+
 void LoadTexture(const char* photoPath)
 {
 	glGenTextures(1, &texture);
 	glBindTexture(GL_TEXTURE_2D, texture);
 	//	Desfasurarea imaginii pe orizonatala/verticala in functie de parametrii de texturare;
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP);
 
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
 
 	int width, height;
-	unsigned char* image = SOIL_load_image(photoPath, &width, &height, 0, SOIL_LOAD_RGB);
-	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, width, height, 0, GL_RGB, GL_UNSIGNED_BYTE, image);
+	unsigned char* image = SOIL_load_image(photoPath, &width, &height, 0, SOIL_LOAD_RGBA);
+	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, width, height, 0, GL_RGBA, GL_UNSIGNED_BYTE, image);
 	glGenerateMipmap(GL_TEXTURE_2D);
 
 	SOIL_free_image_data(image);
@@ -99,7 +126,7 @@ void LoadTexture(const char* photoPath)
 //  Shaderul de fragment / Fragment shader - afecteaza culoarea pixelilor;
 void CreateShaders(void)
 {
-	ProgramId = LoadShaders("Proiect_Shader.vert", "Proiect_Shader.frag");
+	ProgramId = LoadShaders("proiect_shader.vert", "proiect_shader.frag");
 	glUseProgram(ProgramId);
 }
 
@@ -111,64 +138,24 @@ void CreateVBO(void)
 	GLfloat Vertices[] = {
 		//	Varfuri pentru dreptunghi;
 		//	1
-		-800.0f, -300.0f, 0.0f, 1.0f,	0.0f, 0.0f, 0.0f,	0.0f, 0.0f,
-		 800.0f, -300.0f, 0.0f, 1.0f,	0.0f, 0.0f, 0.0f,	1.0f, 0.0f,
-		 800.0f,  300.0f, 0.0f, 1.0f,	0.0f, 0.0f, 0.0f,	1.0f, 1.0f,
-		-800.0f,  300.0f, 0.0f, 1.0f,	0.0f, 0.0f, 0.0f,	0.0f, 1.0f,
+		-400.0f, -150.0f, 0.0f, 1.0f,	0.0f, 0.0f, 0.0f,	0.0f, 0.0f,
+		 400.0f, -150.0f, 0.0f, 1.0f,	0.0f, 0.0f, 0.0f,	1.0f, 0.0f,
+		 400.0f,  150.0f, 0.0f, 1.0f,	0.0f, 0.0f, 0.0f,	1.0f, 1.0f,
+		-400.0f,  150.0f, 0.0f, 1.0f,	0.0f, 0.0f, 0.0f,	0.0f, 1.0f,
 
-		0.265f, 0.714f, 0.0f, 1.0f,
-		0.195f, 0.695f, 0.0f, 1.0f,
-		0.1914f, 0.68996f, 0.0f, 1.0f,
-		0.1575f, 0.66845f, 0.0f, 1.0f,
-		0.1532f, 0.66124f, 0.0f, 1.0f,
-		0.1444f, 0.6149f, 0.0f, 1.0f,
-		0.14446f, 0.4586f, 0.0f, 1.0f,
-		0.12836f, 0.4483f, 0.0f, 1.0f,
-		0.12615f, 0.4354f, 0.0f, 1.0f,
-		0.1449f, 0.4401f, 0.0f, 1.0f,
-		0.1447f, 0.3579f, 0.0f, 1.0f,
-		0.142f, 0.3534f, 0.0f, 1.0f,
-		0.142f, 0.336f, 0.0f, 1.0f,
-		0.14477f, 0.32993f, 0.0f, 1.0f,
-		0.1451f, 0.2861f, 0.0f, 1.0f,
-		0.1433f, 0.2661f, 0.0f, 1.0f,
-		0.1434f, 0.224f, 0.0f, 1.0f,
-		0.144f, 0.214f, 0.0f, 1.0f,
-		0.154f, 0.172f, 0.0f, 1.0f,
-		0.1595f, 0.1533f, 0.0f, 1.0f,
-		0.16574f, 0.1403f, 0.0f, 1.0f,
-		0.175f, 0.1299f, 0.0f, 1.0f,
-		0.1925f, 0.1237f, 0.0f, 1.0f,
-		0.21605f, 0.1196f, 0.0f, 1.0f,
-		0.2655f, 0.1161f, 0.0f, 1.0f,
-		0.30722f, 0.1196f, 0.0f, 1.0f,
-		0.33835f, 0.1237f, 0.0f, 1.0f,
-		0.356f, 0.1299f, 0.0f, 1.0f,
-		0.36556f, 0.1403f, 0.0f, 1.0f,
-		0.37186f, 0.1533f, 0.0f, 1.0f,
-		0.3767f, 0.172f, 0.0f, 1.0f,
-		0.3864f, 0.214f, 0.0f, 1.0f,
-		0.3877f, 0.224f, 0.0f, 1.0f,
-		0.388f, 0.2661f, 0.0f, 1.0f,
-		0.3863f, 0.2861f, 0.0f, 1.0f,
-		0.3863f, 0.32993f, 0.0f, 1.0f,
-		0.38955f, 0.336f, 0.0f, 1.0f,
-		0.38965f, 0.3534f, 0.0f, 1.0f,
-		0.3863f, 0.3579f, 0.0f, 1.0f,
-		0.386f, 0.4401f, 0.0f, 1.0f,
-		0.40726f, 0.4354f, 0.0f, 1.0f,
-		0.4036f, 0.4483f, 0.0f, 1.0f,
-		0.386f, 0.4586f, 0.0f, 1.0f,
-		0.3867f, 0.6149f, 0.0f, 1.0f,
-		0.37745f, 0.6612f, 0.0f, 1.0f,
-		0.374f, 0.6684f, 0.0f, 1.0f,
-		0.3398f, 0.6894f, 0.0f, 1.0f,
-		0.3357f, 0.695f, 0.0f, 1.0f,
+		-250.0f, -100.0f, 0.0f, 1.0f,	0.0f, 0.0f, 0.0f,	0.0f, 0.0f,
+		 -100.0f, -100.0f, 0.0f, 1.0f,	0.0f, 0.0f, 0.0f,	1.0f, 0.0f,
+		 -100.0f,  0.0f, 0.0f, 1.0f,	0.0f, 0.0f, 0.0f,	1.0f, 1.0f,
+		-250.0f,  0.0f, 0.0f, 1.0f,	    0.0f, 0.0f, 0.0f,	0.0f, 1.0f,
 
+		-50.0f, -100.0f, 0.0f, 1.0f,	0.0f, 0.0f, 0.0f,	0.0f, 0.0f,
+		 -200.0f, -100.0f, 0.0f, 1.0f,	0.0f, 0.0f, 0.0f,	1.0f, 0.0f,
+		 -200.0f,  0.0f, 0.0f, 1.0f,	0.0f, 0.0f, 0.0f,	1.0f, 1.0f,
+		-50.0f,  0.0f, 0.0f, 1.0f,	    0.0f, 0.0f, 0.0f,	0.0f, 1.0f,
 	};
 
 	GLuint Indices[] = {
-	  0, 1, 2, 3, 0,
+	  0, 1, 2, 3, 0
 	};
 
 	//  Transmiterea datelor prin buffere;
@@ -199,7 +186,7 @@ void CreateVBO(void)
 
 	//  Se asociaza atributul (2 =  texturare) pentru shader;
 	glEnableVertexAttribArray(2);
-	glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, 9 * sizeof(GLfloat), (GLvoid*)(7 * sizeof(GLfloat)));
+	glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, 9 * sizeof(GLfloat), (GLvoid*)(7  * sizeof(GLfloat)));
 }
 
 //  Elimina obiectele de tip shader dupa rulare;
@@ -259,17 +246,26 @@ void RenderFunction(void)
 	//	Matrici pentru transformari;
 	resizeMatrix = glm::ortho(xMin, xMax, yMin, yMax);
 	matrTransl = glm::translate(glm::mat4(1.0f), glm::vec3(tx, ty, 0.0)); // drum
-	matrTransl1 = glm::translate(glm::mat4(1.0f), glm::vec3(tx, ty, 0.0));// masini
-	angle = 90.0f; // Setăm unghiul la 90 de grade (spre dreapta)
+	matrTransl1 = glm::translate(glm::mat4(1.0f), glm::vec3(tx1, ty1, 0.0));// masini
+	matrTransl2 = glm::translate(glm::mat4(1.0f), glm::vec3(-tx1, -ty1, 0.0));// masini
+
+	angle = 270.0f; // Setăm unghiul la 90 de grade (spre dreapta)
 	matrRot = glm::rotate(glm::mat4(1.0f), glm::radians(angle), glm::vec3(0.0f, 0.0f, 1.0f));
+	
+	matrRot2 = glm::rotate(glm::mat4(1.0f), glm::radians(angle1), glm::vec3(0.0f, 0.0f, 1.0f));
+
 	//myMatrix = resizeMatrix;
 	myMatrix = resizeMatrix * matrTransl * matrRot;
 
 	CreateVBO();
 
-	LoadTexture("drum.jpeg");
+	LoadTexture("drum2.jpg");
+
+	
+
 	glActiveTexture(GL_TEXTURE0);
 	glBindTexture(GL_TEXTURE_2D, texture);
+	
 
 	//	Matricea pentru elementele care isi schimba pozitia;
 	glUniform1i(glGetUniformLocation(ProgramId, "myTexture"), 0);
@@ -277,13 +273,23 @@ void RenderFunction(void)
 
 
 	glDrawArrays(GL_QUADS, 0, 4);
+	
+	glEnable(GL_BLEND);
+	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+	
+	LoadTexture("car11.png");
 
-	myMatrix = resizeMatrix * matrTransl1 * matrRot;
+	glActiveTexture(GL_TEXTURE0);
+	glBindTexture(GL_TEXTURE_2D, texture);
+	myMatrix = resizeMatrix * matrTransl1 * matrRot2 * matrTransl2;
 	glUniform1i(glGetUniformLocation(ProgramId, "myTexture"), 0);
 	glUniformMatrix4fv(myMatrixLocation, 1, GL_FALSE, &myMatrix[0][0]);
 	
+	glDrawArrays(GL_QUADS, 4, 4);
 
+	
 
+	
 
 	glutSwapBuffers();	//	Inlocuieste imaginea deseneata in fereastra cu cea randata; 
 	glFlush();			//  Asigura rularea tuturor comenzilor OpenGL apelate anterior;
@@ -297,7 +303,7 @@ int main(int argc, char* argv[])
 	glutInit(&argc, argv);
 	glutInitDisplayMode(GLUT_SINGLE | GLUT_RGB);					//	Se folosesc 2 buffere (unul pentru afisare si unul pentru randare => animatii cursive) si culori RGB;
 	glutInitWindowSize(winWidth, winHeight);						//  Dimensiunea ferestrei;
-	glutInitWindowPosition(100, 100);								//  Pozitia initiala a ferestrei;
+	glutInitWindowPosition(0, 0);								//  Pozitia initiala a ferestrei;
 	glutCreateWindow("Proiect_drum - OpenGL <<nou>>");		//	Creeaza fereastra de vizualizare, indicand numele acesteia;
 
 	//	Se initializeaza GLEW si se verifica suportul de extensii OpenGL modern disponibile pe sistemul gazda;
@@ -307,7 +313,9 @@ int main(int argc, char* argv[])
 
 	Initialize();							//  Setarea parametrilor necesari pentru fereastra de vizualizare; 
 	glutDisplayFunc(RenderFunction);		//  Desenarea scenei in fereastra;
+	glutIdleFunc(RenderFunction);
 	glutIdleFunc(Move);
+	glutSpecialFunc(ProcessSpecialKeys);
 	glutCloseFunc(Cleanup);					//  Eliberarea resurselor alocate de program;
 
 	//  Bucla principala de procesare a evenimentelor GLUT (functiile care incep cu glut: glutInit etc.) este pornita;
