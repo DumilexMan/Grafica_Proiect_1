@@ -22,5 +22,5 @@ uniform sampler2D myTexture;
 //	Actualizeaza culoarea in functie de codCol;
 void main(void)
 {
-	out_Color = mix(texture(myTexture, ex_Text_Coord), ex_Color, 0.2);
+	out_Color = mix(texture(myTexture, ex_Text_Coord), ex_Color, 0.0);
 }
