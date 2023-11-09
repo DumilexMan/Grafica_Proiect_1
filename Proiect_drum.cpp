@@ -50,13 +50,13 @@ GLfloat
 winWidth = 800, winHeight = 800;
 //	Variabile catre matricile de transformare;
 glm::mat4
-myMatrix, resizeMatrix, matrTransl, matrTransl1, matrTransl2, matrScale, matrRot, matrRot2, matrTranslMas1, matrTranslMas2, matrTranslo;
+myMatrix, resizeMatrix, matrTransl, matrTransl1, matrTransl2, matrScale, matrRot, matrRot2, matrTranslMas1, matrTranslMas2, matrTranslo, matrTransl3, matrTransl4;
 
 int codCol;							//	Variabila ce determina schimbarea culorii pixelilor in shader;
 float angle = 0, angle1 = 0;		//	Unghiul de rotire al patratului;
 float tx = 0.0f; float ty = 100.0f;			//	Coordonatele de translatie ale patratului pe Ox si Oy;
-float tx1 = 0.0f; float ty1 = 0.0f;
-float directie = -1;				//  0 satnga 1 dreapta	-1 initial
+float tx1 = 270.0f; float ty1 = 0.0f;
+float tx2 = 150.0f; float ty2 = 0.0f;
 float xMin = -400.f, xMax = 400.f, yMin = -300.f, yMax = 300.f;		//	Variabile pentru proiectia ortogonala;
 
 
@@ -67,35 +67,46 @@ void Move() {
 		ty = ty - 20;
 	}
 	else
-		ty = 100;
+		ty = 90;
 
 	glutPostRedisplay();	//	Actualizare
 }
 
-void ProcessSpecialKeys(int key, int x, int y) {
-	while (key)            //    Procesarea tastelor 'LEFT', 'RIGHT', 'UP', 'DOWN';
-	{                        //    duce la deplasarea observatorului pe axele Ox si Oy;
-		if (key == GLUT_KEY_LEFT) {
-			tx1 -= 5;
-			//angle1 += 1;
-			break;
-		}
 
-		if (key == GLUT_KEY_RIGHT) {
+
+void ProcessSpecialKeys(int key, int xx, int yy)
+{
+	
+	switch (key)			//	Procesarea tastelor 'LEFT', 'RIGHT', 'UP', 'DOWN'
+	{						//	duce la deplasarea patratului pe axele Ox si Oy;
+	case GLUT_KEY_LEFT:
+		tx1 -= 5;		//	Actualizare fortata a directiei
+		if (GLUT_KEY_UP)
+			ty1 += 5;
+		if (GLUT_KEY_DOWN)
+			ty1 -= 5;
+		break;
+	case GLUT_KEY_RIGHT:
+		tx1 += 5;		//	Actualizare fortata a directiei
+		if (GLUT_KEY_UP)
+			ty1 += 5;
+		if (GLUT_KEY_DOWN)
+			ty1 -= 5;
+		break;
+	case GLUT_KEY_UP:
+		ty1 += 5;
+		if (GLUT_KEY_RIGHT)
 			tx1 += 5;
-			//angle1 -= 1;
-			break;
-		}
-
-		if (key == GLUT_KEY_UP) {
-			ty1 += 15;
-			break;
-		}
-
-		if (key == GLUT_KEY_DOWN) {
-			ty1 -= 15;
-			break;
-		}
+		if (GLUT_KEY_LEFT)
+			tx1 -= 5;
+		break;
+	case GLUT_KEY_DOWN:
+		ty1 -= 5;
+		if (GLUT_KEY_RIGHT)
+			tx1 += 5;
+		if (GLUT_KEY_LEFT)
+			tx1 -= 5;
+		break;
 	}
 }
 
@@ -136,19 +147,56 @@ void CreateVBO(void)
 	//  Coordonatele varfurilor;
 	GLfloat Vertices[] = {
 
-		-150.0f, -400.0f, 0.0f, 1.0f,	0.0f, 0.0f, 0.0f,	0.0f, 0.0f,
-		 150.0f, -400.0f, 0.0f, 1.0f,	0.0f, 0.0f, 0.0f,	1.0f, 0.0f,
-		 150.0f,  400.0f, 0.0f, 1.0f,	0.0f, 0.0f, 0.0f,	1.0f, 1.0f,
-		-150.0f,  400.0f, 0.0f, 1.0f,	0.0f, 0.0f, 0.0f,	0.0f, 1.0f,
+		-400.0f, -500.0f, 0.0f, 1.0f,	0.0f, 0.0f, 0.0f,	0.0f, 0.0f,
+		 400.0f, -500.0f, 0.0f, 1.0f,	0.0f, 0.0f, 0.0f,	1.0f, 0.0f,
+		 400.0f,  500.0f, 0.0f, 1.0f,	0.0f, 0.0f, 0.0f,	1.0f, 1.0f,
+		-400.0f,  500.0f, 0.0f, 1.0f,	0.0f, 0.0f, 0.0f,	0.0f, 1.0f,
 
-		-250.0f, -100.0f, 0.0f, 1.0f,	0.0f, 0.0f, 0.0f,	0.0f, 0.0f,
-		-100.0f, -100.0f, 0.0f, 1.0f,	0.0f, 0.0f, 0.0f,	1.0f, 0.0f,
+		-250.0f, -120.0f, 0.0f, 1.0f,	0.0f, 0.0f, 0.0f,	0.0f, 0.0f,
+		-100.0f, -120.0f, 0.0f, 1.0f,	0.0f, 0.0f, 0.0f,	1.0f, 0.0f,
+		-100.0f,    0.0f, 0.0f, 1.0f,	0.0f, 0.0f, 0.0f,	1.0f, 1.0f,
+		-250.0f,    0.0f, 0.0f, 1.0f,	0.0f, 0.0f, 0.0f,	0.0f, 1.0f,
+
+		-250.0f, -120.0f, 0.0f, 1.0f,	0.0f, 0.0f, 0.0f,	0.0f, 0.0f,
+		-100.0f, -120.0f, 0.0f, 1.0f,	0.0f, 0.0f, 0.0f,	1.0f, 0.0f,
+		-100.0f,    0.0f, 0.0f, 1.0f,	0.0f, 0.0f, 0.0f,	1.0f, 1.0f,
+		-250.0f,    0.0f, 0.0f, 1.0f,	0.0f, 0.0f, 0.0f,	0.0f, 1.0f,
+
+		//copac 1
+		-250.0f, -120.0f, 0.0f, 1.0f,	0.0f, 0.0f, 0.0f,	0.0f, 0.0f,
+		-100.0f, -120.0f, 0.0f, 1.0f,	0.0f, 0.0f, 0.0f,	1.0f, 0.0f,
+		-100.0f,    0.0f, 0.0f, 1.0f,	0.0f, 0.0f, 0.0f,	1.0f, 1.0f,
+		-250.0f,    0.0f, 0.0f, 1.0f,	0.0f, 0.0f, 0.0f,	0.0f, 1.0f,
+		//copac 2
+		-250.0f, -120.0f, 0.0f, 1.0f,	0.0f, 0.0f, 0.0f,	0.0f, 0.0f,
+		-100.0f, -120.0f, 0.0f, 1.0f,	0.0f, 0.0f, 0.0f,	1.0f, 0.0f,
+		-100.0f,    0.0f, 0.0f, 1.0f,	0.0f, 0.0f, 0.0f,	1.0f, 1.0f,
+		-250.0f,    0.0f, 0.0f, 1.0f,	0.0f, 0.0f, 0.0f,	0.0f, 1.0f,
+		//copac 3
+		-250.0f, -120.0f, 0.0f, 1.0f,	0.0f, 0.0f, 0.0f,	0.0f, 0.0f,
+		-100.0f, -120.0f, 0.0f, 1.0f,	0.0f, 0.0f, 0.0f,	1.0f, 0.0f,
+		-100.0f,    0.0f, 0.0f, 1.0f,	0.0f, 0.0f, 0.0f,	1.0f, 1.0f,
+		-250.0f,    0.0f, 0.0f, 1.0f,	0.0f, 0.0f, 0.0f,	0.0f, 1.0f,
+		//copac 4
+		-250.0f, -120.0f, 0.0f, 1.0f,	0.0f, 0.0f, 0.0f,	0.0f, 0.0f,
+		-100.0f, -120.0f, 0.0f, 1.0f,	0.0f, 0.0f, 0.0f,	1.0f, 0.0f,
+		-100.0f,    0.0f, 0.0f, 1.0f,	0.0f, 0.0f, 0.0f,	1.0f, 1.0f,
+		-250.0f,    0.0f, 0.0f, 1.0f,	0.0f, 0.0f, 0.0f,	0.0f, 1.0f,
+		//copac 5
+		-250.0f, -120.0f, 0.0f, 1.0f,	0.0f, 0.0f, 0.0f,	0.0f, 0.0f,
+		-100.0f, -120.0f, 0.0f, 1.0f,	0.0f, 0.0f, 0.0f,	1.0f, 0.0f,
+		-100.0f,    0.0f, 0.0f, 1.0f,	0.0f, 0.0f, 0.0f,	1.0f, 1.0f,
+		-250.0f,    0.0f, 0.0f, 1.0f,	0.0f, 0.0f, 0.0f,	0.0f, 1.0f,
+		//copac 6
+		-250.0f, -120.0f, 0.0f, 1.0f,	0.0f, 0.0f, 0.0f,	0.0f, 0.0f,
+		-100.0f, -120.0f, 0.0f, 1.0f,	0.0f, 0.0f, 0.0f,	1.0f, 0.0f,
 		-100.0f,    0.0f, 0.0f, 1.0f,	0.0f, 0.0f, 0.0f,	1.0f, 1.0f,
 		-250.0f,    0.0f, 0.0f, 1.0f,	0.0f, 0.0f, 0.0f,	0.0f, 1.0f,
 
 	};
 
 	GLuint Indices[] = {
+	  0, 1, 2, 3, 0,
 	  0, 1, 2, 3, 0,
 	  0, 1, 2, 3, 0,
 	};
@@ -242,9 +290,11 @@ void RenderFunction(void)
 	matrTransl = glm::translate(glm::mat4(1.0f), glm::vec3(tx, ty, 0.0));		// drum
 	matrTransl1 = glm::translate(glm::mat4(1.0f), glm::vec3(tx1, ty1, 0.0));	// masini
 	matrTransl2 = glm::translate(glm::mat4(1.0f), glm::vec3(-tx1, -ty1, 0.0));	// masini inversa
+	matrTransl3 = glm::translate(glm::mat4(1.0f), glm::vec3(tx1, ty1, 0.0));	// masini politie
+	matrTransl4 = glm::translate(glm::mat4(1.0f), glm::vec3(-tx1, -ty1, 0.0));	// masini politie inversa
 	matrTranslo = glm::translate(glm::mat4(1.0f), glm::vec3(0, 0, 0.0));		// drum
 
-	angle = 0.0f; // Setăm unghiul la 90 de grade (spre dreapta)
+	angle = 0.0f;
 
 	matrRot = glm::rotate(glm::mat4(1.0f), glm::radians(angle), glm::vec3(0.0f, 0.0f, 1.0f));
 
@@ -259,7 +309,7 @@ void RenderFunction(void)
 	
 	CreateVBO();
 
-	LoadTexture("drum2.jpg");
+	LoadTexture("drum3.jpg");
 
 	glActiveTexture(GL_TEXTURE0);
 	glBindTexture(GL_TEXTURE_2D, texture);
@@ -272,6 +322,8 @@ void RenderFunction(void)
 	
 
 	glDrawArrays(GL_QUADS, 0, 4);
+
+	//masina
 
 	glEnable(GL_BLEND);
 	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
@@ -288,8 +340,22 @@ void RenderFunction(void)
 
 	glDrawArrays(GL_QUADS, 4, 4);
 
+	// politie
 
+	glEnable(GL_BLEND);
+	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
+	LoadTexture("police.png");
+
+	glActiveTexture(GL_TEXTURE0);
+	glBindTexture(GL_TEXTURE_2D, texture);
+
+	myMatrix = resizeMatrix * matrTransl3;
+
+	glUniform1i(glGetUniformLocation(ProgramId, "myTexture"), 0);
+	glUniformMatrix4fv(myMatrixLocation, 1, GL_FALSE, &myMatrix[0][0]);
+
+	glDrawArrays(GL_QUADS, 8, 4);
 
 
 
