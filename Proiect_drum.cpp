@@ -65,6 +65,7 @@ int refreshMilis = 10;
 
 void Move() {
 	//Aici o sa se miste marcajul și copacii
+
 	if (ty > -100)
 	{
 		ty = ty - 20;
@@ -87,20 +88,25 @@ void ProcessSpecialKeys(int key, int xx, int yy)
 	switch (key)			//	Procesarea tastelor 'LEFT', 'RIGHT', 'UP', 'DOWN'
 	{						//	duce la deplasarea patratului pe axele Ox si Oy;
 	case GLUT_KEY_LEFT:
-		tx1 -= 5;		//	Actualizare fortata a directiei
+		if(ty1 > -150.0f)
+			if (tx1 < 270.0f or ty1 < 60.0f)
+			tx1 -= 5;		//	Actualizare fortata a directiei
 		if (GLUT_KEY_UP)
 			ty1 += 5;
 		if (GLUT_KEY_DOWN)
 			ty1 -= 5;
 		break;
 	case GLUT_KEY_RIGHT:
-		tx1 += 5;		//	Actualizare fortata a directiei
+		if (ty1 > -150.0f)
+			if (tx1 < 270.0f or ty1 < 60.0f)
+			tx1 += 5;		//	Actualizare fortata a directiei
 		if (GLUT_KEY_UP)
 			ty1 += 5;
 		if (GLUT_KEY_DOWN)
 			ty1 -= 5;
 		break;
 	case GLUT_KEY_UP:
+
 		ty1 += 5;
 		if (GLUT_KEY_RIGHT)
 			tx1 += 5;
