@@ -50,14 +50,16 @@ GLfloat
 winWidth = 800, winHeight = 800;
 //	Variabile catre matricile de transformare;
 glm::mat4
-myMatrix, resizeMatrix, matrTransl, matrTransl1, matrTransl2, matrScale, matrRot, matrRot2, matrTranslMas1, matrTranslMas2, matrTranslo, matrTransl3, matrTransl4;
+myMatrix, resizeMatrix, matrTransl, matrTransl1, matrTransl2, matrScale, matrRot, matrRot2, matrTranslMas1, matrTranslMas2, matrTranslo, matrTransl3, matrTransl4, matrTransl5;
 
 int codCol;							//	Variabila ce determina schimbarea culorii pixelilor in shader;
 float angle = 0, angle1 = 0;		//	Unghiul de rotire al patratului;
 float tx = 0.0f; float ty = 100.0f;			//	Coordonatele de translatie ale patratului pe Ox si Oy;
-float tx1 = 270.0f; float ty1 = 0.0f;
-float tx2 = 150.0f; float ty2 = 0.0f;
+float tx1 = 270.0f; float ty1 = -150.0f;
+float tx2 = 300.0f; float ty2 = 30.0f;
+float tx3 = 0.0f;   float ty3 = 0.0f;
 float xMin = -400.f, xMax = 400.f, yMin = -300.f, yMax = 300.f;		//	Variabile pentru proiectia ortogonala;
+float coefx, coefy;
 
 
 void Move() {
@@ -65,9 +67,13 @@ void Move() {
 	if (ty > -100)
 	{
 		ty = ty - 20;
+		ty3 = ty3 - 20;
 	}
 	else
+	{
 		ty = 90;
+		ty3 = 90;
+	}
 
 	glutPostRedisplay();	//	Actualizare
 }
@@ -157,45 +163,28 @@ void CreateVBO(void)
 		-100.0f,    0.0f, 0.0f, 1.0f,	0.0f, 0.0f, 0.0f,	1.0f, 1.0f,
 		-250.0f,    0.0f, 0.0f, 1.0f,	0.0f, 0.0f, 0.0f,	0.0f, 1.0f,
 
-		-250.0f, -120.0f, 0.0f, 1.0f,	0.0f, 0.0f, 0.0f,	0.0f, 0.0f,
-		-100.0f, -120.0f, 0.0f, 1.0f,	0.0f, 0.0f, 0.0f,	1.0f, 0.0f,
-		-100.0f,    0.0f, 0.0f, 1.0f,	0.0f, 0.0f, 0.0f,	1.0f, 1.0f,
-		-250.0f,    0.0f, 0.0f, 1.0f,	0.0f, 0.0f, 0.0f,	0.0f, 1.0f,
+		-300.0f, -160.0f, 0.0f, 1.0f,    0.0f, 0.0f, 0.0f,    0.0f, 0.0f,
+		-100.0f, -160.0f, 0.0f, 1.0f,    0.0f, 0.0f, 0.0f,    1.0f, 0.0f,
+		-100.0f,    0.0f, 0.0f, 1.0f,    0.0f, 0.0f, 0.0f,    1.0f, 1.0f,
+		-300.0f,    0.0f, 0.0f, 1.0f,    0.0f, 0.0f, 0.0f,    0.0f, 1.0f,
 
 		//copac 1
-		-250.0f, -120.0f, 0.0f, 1.0f,	0.0f, 0.0f, 0.0f,	0.0f, 0.0f,
-		-100.0f, -120.0f, 0.0f, 1.0f,	0.0f, 0.0f, 0.0f,	1.0f, 0.0f,
-		-100.0f,    0.0f, 0.0f, 1.0f,	0.0f, 0.0f, 0.0f,	1.0f, 1.0f,
-		-250.0f,    0.0f, 0.0f, 1.0f,	0.0f, 0.0f, 0.0f,	0.0f, 1.0f,
+		-450.0f, -250.0f, 0.0f, 1.0f,	0.0f, 0.0f, 0.0f,	0.0f, 0.0f,
+		-150.0f, -250.0f, 0.0f, 1.0f,	0.0f, 0.0f, 0.0f,	1.0f, 0.0f,
+		-150.0f, -100.0f, 0.0f, 1.0f,	0.0f, 0.0f, 0.0f,	1.0f, 1.0f,
+		-450.0f, -100.0f, 0.0f, 1.0f,	0.0f, 0.0f, 0.0f,	0.0f, 1.0f,
+
 		//copac 2
-		-250.0f, -120.0f, 0.0f, 1.0f,	0.0f, 0.0f, 0.0f,	0.0f, 0.0f,
-		-100.0f, -120.0f, 0.0f, 1.0f,	0.0f, 0.0f, 0.0f,	1.0f, 0.0f,
-		-100.0f,    0.0f, 0.0f, 1.0f,	0.0f, 0.0f, 0.0f,	1.0f, 1.0f,
-		-250.0f,    0.0f, 0.0f, 1.0f,	0.0f, 0.0f, 0.0f,	0.0f, 1.0f,
-		//copac 3
-		-250.0f, -120.0f, 0.0f, 1.0f,	0.0f, 0.0f, 0.0f,	0.0f, 0.0f,
-		-100.0f, -120.0f, 0.0f, 1.0f,	0.0f, 0.0f, 0.0f,	1.0f, 0.0f,
-		-100.0f,    0.0f, 0.0f, 1.0f,	0.0f, 0.0f, 0.0f,	1.0f, 1.0f,
-		-250.0f,    0.0f, 0.0f, 1.0f,	0.0f, 0.0f, 0.0f,	0.0f, 1.0f,
-		//copac 4
-		-250.0f, -120.0f, 0.0f, 1.0f,	0.0f, 0.0f, 0.0f,	0.0f, 0.0f,
-		-100.0f, -120.0f, 0.0f, 1.0f,	0.0f, 0.0f, 0.0f,	1.0f, 0.0f,
-		-100.0f,    0.0f, 0.0f, 1.0f,	0.0f, 0.0f, 0.0f,	1.0f, 1.0f,
-		-250.0f,    0.0f, 0.0f, 1.0f,	0.0f, 0.0f, 0.0f,	0.0f, 1.0f,
-		//copac 5
-		-250.0f, -120.0f, 0.0f, 1.0f,	0.0f, 0.0f, 0.0f,	0.0f, 0.0f,
-		-100.0f, -120.0f, 0.0f, 1.0f,	0.0f, 0.0f, 0.0f,	1.0f, 0.0f,
-		-100.0f,    0.0f, 0.0f, 1.0f,	0.0f, 0.0f, 0.0f,	1.0f, 1.0f,
-		-250.0f,    0.0f, 0.0f, 1.0f,	0.0f, 0.0f, 0.0f,	0.0f, 1.0f,
-		//copac 6
-		-250.0f, -120.0f, 0.0f, 1.0f,	0.0f, 0.0f, 0.0f,	0.0f, 0.0f,
-		-100.0f, -120.0f, 0.0f, 1.0f,	0.0f, 0.0f, 0.0f,	1.0f, 0.0f,
-		-100.0f,    0.0f, 0.0f, 1.0f,	0.0f, 0.0f, 0.0f,	1.0f, 1.0f,
-		-250.0f,    0.0f, 0.0f, 1.0f,	0.0f, 0.0f, 0.0f,	0.0f, 1.0f,
+		 150.0f,  350.0f, 0.0f, 1.0f,	0.0f, 0.0f, 0.0f,	0.0f, 0.0f,
+		 450.0f,  350.0f, 0.0f, 1.0f,	0.0f, 0.0f, 0.0f,	1.0f, 0.0f,
+		 450.0f,  200.0f, 0.0f, 1.0f,	0.0f, 0.0f, 0.0f,	1.0f, 1.0f,
+		 150.0f,  200.0f, 0.0f, 1.0f,	0.0f, 0.0f, 0.0f,	0.0f, 1.0f,
+
 
 	};
 
 	GLuint Indices[] = {
+	  0, 1, 2, 3, 0,
 	  0, 1, 2, 3, 0,
 	  0, 1, 2, 3, 0,
 	  0, 1, 2, 3, 0,
@@ -290,8 +279,9 @@ void RenderFunction(void)
 	matrTransl = glm::translate(glm::mat4(1.0f), glm::vec3(tx, ty, 0.0));		// drum
 	matrTransl1 = glm::translate(glm::mat4(1.0f), glm::vec3(tx1, ty1, 0.0));	// masini
 	matrTransl2 = glm::translate(glm::mat4(1.0f), glm::vec3(-tx1, -ty1, 0.0));	// masini inversa
-	matrTransl3 = glm::translate(glm::mat4(1.0f), glm::vec3(tx1, ty1, 0.0));	// masini politie
-	matrTransl4 = glm::translate(glm::mat4(1.0f), glm::vec3(-tx1, -ty1, 0.0));	// masini politie inversa
+	matrTransl3 = glm::translate(glm::mat4(1.0f), glm::vec3(tx2, ty2, 0.0));	// masini politie
+	matrTransl4 = glm::translate(glm::mat4(1.0f), glm::vec3(-tx2, -ty2, 0.0));	// masini politie inversa
+	matrTransl5 = glm::translate(glm::mat4(1.0f), glm::vec3(tx3, ty3, 0.0));
 	matrTranslo = glm::translate(glm::mat4(1.0f), glm::vec3(0, 0, 0.0));		// drum
 
 	angle = 0.0f;
@@ -356,6 +346,41 @@ void RenderFunction(void)
 	glUniformMatrix4fv(myMatrixLocation, 1, GL_FALSE, &myMatrix[0][0]);
 
 	glDrawArrays(GL_QUADS, 8, 4);
+
+	// copac 1
+
+	glEnable(GL_BLEND);
+	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+
+	LoadTexture("tree.png");
+
+	glActiveTexture(GL_TEXTURE0);
+	glBindTexture(GL_TEXTURE_2D, texture);
+
+	myMatrix = resizeMatrix * matrTransl5;
+
+	glUniform1i(glGetUniformLocation(ProgramId, "myTexture"), 0);
+	glUniformMatrix4fv(myMatrixLocation, 1, GL_FALSE, &myMatrix[0][0]);
+
+	glDrawArrays(GL_QUADS, 12, 4);
+
+	// copac 2
+
+	glEnable(GL_BLEND);
+	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+
+	LoadTexture("tree.png");
+
+	glActiveTexture(GL_TEXTURE0);
+	glBindTexture(GL_TEXTURE_2D, texture);
+
+	myMatrix = resizeMatrix * matrTransl5;
+
+	glUniform1i(glGetUniformLocation(ProgramId, "myTexture"), 0);
+	glUniformMatrix4fv(myMatrixLocation, 1, GL_FALSE, &myMatrix[0][0]);
+
+	glDrawArrays(GL_QUADS, 16, 4);
+
 
 
 
