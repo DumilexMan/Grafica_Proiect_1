@@ -55,11 +55,12 @@ myMatrix, resizeMatrix, matrTransl, matrTransl1, matrTransl2, matrScale, matrRot
 int codCol;							//	Variabila ce determina schimbarea culorii pixelilor in shader;
 float angle = 0, angle1 = 0;		//	Unghiul de rotire al patratului;
 float tx = 0.0f; float ty = 100.0f;			//	Coordonatele de translatie ale patratului pe Ox si Oy;
-float tx1 = 270.0f; float ty1 = -150.0f;
+float tx1 = 270.0f; float ty1 = -300.0f;
 float tx2 = 300.0f; float ty2 = 30.0f;
 float tx3 = 0.0f;   float ty3 = 0.0f;
 float xMin = -400.f, xMax = 400.f, yMin = -300.f, yMax = 300.f;		//	Variabile pentru proiectia ortogonala;
 float coefx, coefy;
+int refreshMilis = 10;
 
 
 void Move() {
@@ -385,8 +386,24 @@ void RenderFunction(void)
 
 
 	glutSwapBuffers();	//	Inlocuieste imaginea deseneata in fereastra cu cea randata; 
+
+	if (ty1 <= -150.0f)
+		ty1 += 5;
+
+	if (tx1 >= 270.0f and ty1 >= 60.0f) {
+		ty1 += 10;
+		ty2 += 10;
+	}
+
 	glFlush();			//  Asigura rularea tuturor comenzilor OpenGL apelate anterior;
 }
+
+
+void Timer(int value) {
+	glutPostRedisplay();
+	glutTimerFunc(refreshMilis, Timer, 0);
+}
+
 
 //	Punctul de intrare in program, se ruleaza rutina OpenGL;
 int main(int argc, char* argv[])
@@ -410,6 +427,7 @@ int main(int argc, char* argv[])
 	glutIdleFunc(Move);
 	glutSpecialFunc(ProcessSpecialKeys);
 	glutCloseFunc(Cleanup);					//  Eliberarea resurselor alocate de program;
+	glutTimerFunc(0, Timer, 0);
 
 	//  Bucla principala de procesare a evenimentelor GLUT (functiile care incep cu glut: glutInit etc.) este pornita;
 	//  Prelucreaza evenimentele si deseneaza fereastra OpenGL pana cand utilizatorul o inchide;
