@@ -1,13 +1,3 @@
-//
-// ================================================
-// | Grafica pe calculator                        |
-// ================================================
-// | Laboratorul III - 03_05_Shader.vert |
-// =======================================
-// 
-//  Shaderul de varfuri / Vertex shader - afecteaza geometria scenei; 
-//
-
 #version 330    //  Versiunea GLSL;
 
 //  Variabile de intrare (dinspre programul principal);
