@@ -3,9 +3,9 @@
 #include <stdio.h>
 #include <GL/glew.h>        //  Definește prototipurile functiilor OpenGL si constantele necesare pentru programarea OpenGL moderna; 
 #include <GL/freeglut.h>    //	Include functii pentru: 
-							//	- gestionarea ferestrelor si evenimentelor de tastatura si mouse, 
-							//  - desenarea de primitive grafice precum dreptunghiuri, cercuri sau linii, 
-							//  - crearea de meniuri si submeniuri;
+//	- gestionarea ferestrelor si evenimentelor de tastatura si mouse, 
+//  - desenarea de primitive grafice precum dreptunghiuri, cercuri sau linii, 
+//  - crearea de meniuri si submeniuri;
 #include "loadShaders.h"	//	Fisierul care face legatura intre program si shadere;
 #include "glm/glm.hpp"		//	Bibloteci utilizate pentru transformari grafice;
 #include "glm/gtc/matrix_transform.hpp"
@@ -30,21 +30,27 @@ GLfloat
 winWidth = 800, winHeight = 800;
 //	Variabile catre matricile de transformare;
 glm::mat4
-myMatrix, 
-resizeMatrix, 
-matrTranslRoad, 
-matrTranslCar, 
-matrTranslCarReverse,   
-matrTranslPolice,  
-matrTranslTree;
+myMatrix,
+resizeMatrix,
+matrTranslRoad,
+matrTranslCar,
+matrTranslCarReverse,
+matrTranslPolice,
+matrTranslTree,
+matrRot2,
+matrTranslCarInv,
+matrTranslCarT4;
 
 
 float tx = 0.0f; float ty = 100.0f;			//	Coordonatele de translatie ale patratului pe Ox si Oy;
-float tx1 = 270.0f; float ty1 = -300.0f;
+float tx1 = 100.0f; float ty1 = -240.0f;
 float tx2 = 300.0f; float ty2 = 30.0f;
 float tx3 = 0.0f;   float ty3 = 0.0f;
+float tx4 = 0.0f;   float ty4 = 0.0f;
 float xMin = -400.f, xMax = 400.f, yMin = -300.f, yMax = 300.f;		//	Variabile pentru proiectia ortogonala;
 float coefx, coefy;
+float angle = 0;
+float angle1 = 0;
 int refreshMillis = 10;
 
 
@@ -66,40 +72,45 @@ void Move() {
 
 void ProcessSpecialKeys(int key, int xx, int yy)
 {
+	float coefX = cos(glm::radians(angle1 + 90));
+	float coefY = sin(glm::radians(angle1 + 90));
 	switch (key)			//	Procesarea tastelor 'LEFT', 'RIGHT', 'UP', 'DOWN'
 	{						//	duce la deplasarea patratului pe axele Ox si Oy;
 	case GLUT_KEY_LEFT:
-		if (ty1 > -150.0f)
+		//if (ty1 > -150.0f)
 			if (tx1 < 270.0f or ty1 < 60.0f)
-				tx1 -= 5;		//	Actualizare fortata a directiei
-		if (GLUT_KEY_UP)
-			ty1 += 5;
-		if (GLUT_KEY_DOWN)
-			ty1 -= 5;
+			{
+				angle1 += 5;
+				coefX = cos(glm::radians(angle1 + 90));
+				coefY = sin(glm::radians(angle1 + 90));
+			}
 		break;
 	case GLUT_KEY_RIGHT:
-		if (ty1 > -150.0f)
+		//if (ty1 > -150.0f)
 			if (tx1 < 270.0f or ty1 < 60.0f)
-				tx1 += 5;		//	Actualizare fortata a directiei
-		if (GLUT_KEY_UP)
-			ty1 += 5;
-		if (GLUT_KEY_DOWN)
-			ty1 -= 5;
+			{
+				angle1 -= 5;
+				coefX = cos(glm::radians(angle1 + 90));
+				coefY = sin(glm::radians(angle1 + 90));
+			}
 		break;
 	case GLUT_KEY_UP:
-		ty1 += 5;
-		if (GLUT_KEY_RIGHT)
-			tx1 += 5;
-		if (GLUT_KEY_LEFT)
-			tx1 -= 5;
+	{
+		ty4 += 5 * coefY;
+		ty1 += 5 * coefY;
+		tx1 += 5 * coefX;
+		tx4 += 5 * coefX; 
 		break;
+	}
+		
 	case GLUT_KEY_DOWN:
-		ty1 -= 5;
-		if (GLUT_KEY_RIGHT)
-			tx1 += 5;
-		if (GLUT_KEY_LEFT)
-			tx1 -= 5;
+	{
+		ty4 -= 5 * coefY;
+		ty1 -= 5 * coefY;
+		tx1 -= 5 * coefX;
+		tx4 -= 5 * coefX;
 		break;
+	}		
 	}
 }
 
@@ -146,10 +157,10 @@ void CreateVBO(void)
 		-400.0f,  500.0f, 0.0f, 1.0f,	0.0f, 0.0f, 0.0f,	0.0f, 1.0f,
 
 		// masina 
-		-250.0f, -120.0f, 0.0f, 1.0f,	0.0f, 0.0f, 0.0f,	0.0f, 0.0f,
-		-100.0f, -120.0f, 0.0f, 1.0f,	0.0f, 0.0f, 0.0f,	1.0f, 0.0f,
-		-100.0f,    0.0f, 0.0f, 1.0f,	0.0f, 0.0f, 0.0f,	1.0f, 1.0f,
-		-250.0f,    0.0f, 0.0f, 1.0f,	0.0f, 0.0f, 0.0f,	0.0f, 1.0f,
+		  25.0f, -300.0f, 0.0f, 1.0f,	0.0f, 0.0f, 0.0f,	0.0f, 0.0f,
+		 175.0f, -300.0f, 0.0f, 1.0f,	0.0f, 0.0f, 0.0f,	1.0f, 0.0f,
+		 175.0f, -180.0f, 0.0f, 1.0f,	0.0f, 0.0f, 0.0f,	1.0f, 1.0f,
+		  25.0f, -180.0f, 0.0f, 1.0f,	0.0f, 0.0f, 0.0f,	0.0f, 1.0f,
 
 		// politie
 		-300.0f, -160.0f, 0.0f, 1.0f,    0.0f, 0.0f, 0.0f,    0.0f, 0.0f,
@@ -248,6 +259,9 @@ void RenderFunction(void)
 	matrTranslCarReverse = glm::translate(glm::mat4(1.0f), glm::vec3(-tx1, -ty1, 0.0));	// masini inversa
 	matrTranslPolice = glm::translate(glm::mat4(1.0f), glm::vec3(tx2, ty2, 0.0));		// masina politie
 	matrTranslTree = glm::translate(glm::mat4(1.0f), glm::vec3(tx3, ty3, 0.0));			// copaci
+	matrRot2 = glm::rotate(glm::mat4(1.0f), glm::radians((float)angle1), glm::vec3(0.0f, 0.0f, 1.0f));	// rotatie
+	matrTranslCarInv = glm::translate(glm::mat4(1.0f), glm::vec3(-tx1, -ty1, 0.0));		// masini invers
+	matrTranslCarT4 = glm::translate(glm::mat4(1.0f), glm::vec3(tx4, ty4, 0.0));// masini
 
 	// Drum
 	myMatrix = resizeMatrix;
@@ -266,7 +280,7 @@ void RenderFunction(void)
 	LoadTexture("car1.png");
 	glActiveTexture(GL_TEXTURE0);
 	glBindTexture(GL_TEXTURE_2D, texture);
-	myMatrix = resizeMatrix * matrTranslCar;
+	myMatrix = resizeMatrix * matrTranslCar * matrRot2 * matrTranslCarInv * matrTranslCarT4;
 	glUniform1i(glGetUniformLocation(ProgramId, "myTexture"), 0);
 	glUniformMatrix4fv(myMatrixLocation, 1, GL_FALSE, &myMatrix[0][0]);
 	glDrawArrays(GL_QUADS, 4, 4);
