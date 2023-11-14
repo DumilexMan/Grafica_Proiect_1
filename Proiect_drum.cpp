@@ -39,7 +39,8 @@ matrTranslPolice,
 matrTranslTree,
 matrRot2,
 matrTranslCarInv,
-matrTranslCarT4;
+matrTranslCarT4,
+matrScaleCars;
 
 
 float tx = 0.0f; float ty = 100.0f;			//	Coordonatele de translatie ale patratului pe Ox si Oy;
@@ -78,31 +79,31 @@ void ProcessSpecialKeys(int key, int xx, int yy)
 	{						//	duce la deplasarea patratului pe axele Ox si Oy;
 	case GLUT_KEY_LEFT:
 		//if (ty1 > -150.0f)
-			if (tx1 < 270.0f or ty1 < 60.0f)
-			{
-				angle1 += 5;
-				coefX = cos(glm::radians(angle1 + 90));
-				coefY = sin(glm::radians(angle1 + 90));
-			}
+		if (tx1 < 270.0f or ty1 < 60.0f)
+		{
+			angle1 += 5;
+			coefX = cos(glm::radians(angle1 + 90));
+			coefY = sin(glm::radians(angle1 + 90));
+		}
 		break;
 	case GLUT_KEY_RIGHT:
 		//if (ty1 > -150.0f)
-			if (tx1 < 270.0f or ty1 < 60.0f)
-			{
-				angle1 -= 5;
-				coefX = cos(glm::radians(angle1 + 90));
-				coefY = sin(glm::radians(angle1 + 90));
-			}
+		if (tx1 < 270.0f or ty1 < 60.0f)
+		{
+			angle1 -= 5;
+			coefX = cos(glm::radians(angle1 + 90));
+			coefY = sin(glm::radians(angle1 + 90));
+		}
 		break;
 	case GLUT_KEY_UP:
 	{
 		ty4 += 5 * coefY;
 		ty1 += 5 * coefY;
 		tx1 += 5 * coefX;
-		tx4 += 5 * coefX; 
+		tx4 += 5 * coefX;
 		break;
 	}
-		
+
 	case GLUT_KEY_DOWN:
 	{
 		ty4 -= 5 * coefY;
@@ -110,7 +111,7 @@ void ProcessSpecialKeys(int key, int xx, int yy)
 		tx1 -= 5 * coefX;
 		tx4 -= 5 * coefX;
 		break;
-	}		
+	}
 	}
 }
 
@@ -162,23 +163,23 @@ void CreateVBO(void)
 		 175.0f, -180.0f, 0.0f, 1.0f,	0.0f, 0.0f, 0.0f,	1.0f, 1.0f,
 		  25.0f, -180.0f, 0.0f, 1.0f,	0.0f, 0.0f, 0.0f,	0.0f, 1.0f,
 
-		// politie
-		-300.0f, -160.0f, 0.0f, 1.0f,    0.0f, 0.0f, 0.0f,    0.0f, 0.0f,
-		-100.0f, -160.0f, 0.0f, 1.0f,    0.0f, 0.0f, 0.0f,    1.0f, 0.0f,
-		-100.0f,    0.0f, 0.0f, 1.0f,    0.0f, 0.0f, 0.0f,    1.0f, 1.0f,
-		-300.0f,    0.0f, 0.0f, 1.0f,    0.0f, 0.0f, 0.0f,    0.0f, 1.0f,
+		  // politie
+		  -300.0f, -160.0f, 0.0f, 1.0f,    0.0f, 0.0f, 0.0f,    0.0f, 0.0f,
+		  -100.0f, -160.0f, 0.0f, 1.0f,    0.0f, 0.0f, 0.0f,    1.0f, 0.0f,
+		  -100.0f,    0.0f, 0.0f, 1.0f,    0.0f, 0.0f, 0.0f,    1.0f, 1.0f,
+		  -300.0f,    0.0f, 0.0f, 1.0f,    0.0f, 0.0f, 0.0f,    0.0f, 1.0f,
 
-		// primul copac
-		-450.0f, -250.0f, 0.0f, 1.0f,	0.0f, 0.0f, 0.0f,	0.0f, 0.0f,
-		-150.0f, -250.0f, 0.0f, 1.0f,	0.0f, 0.0f, 0.0f,	1.0f, 0.0f,
-		-150.0f, -100.0f, 0.0f, 1.0f,	0.0f, 0.0f, 0.0f,	1.0f, 1.0f,
-		-450.0f, -100.0f, 0.0f, 1.0f,	0.0f, 0.0f, 0.0f,	0.0f, 1.0f,
+		  // primul copac
+		  -450.0f, -250.0f, 0.0f, 1.0f,	0.0f, 0.0f, 0.0f,	0.0f, 0.0f,
+		  -150.0f, -250.0f, 0.0f, 1.0f,	0.0f, 0.0f, 0.0f,	1.0f, 0.0f,
+		  -150.0f, -100.0f, 0.0f, 1.0f,	0.0f, 0.0f, 0.0f,	1.0f, 1.0f,
+		  -450.0f, -100.0f, 0.0f, 1.0f,	0.0f, 0.0f, 0.0f,	0.0f, 1.0f,
 
-		// al doilea copac
-		 150.0f,  350.0f, 0.0f, 1.0f,	0.0f, 0.0f, 0.0f,	0.0f, 0.0f,
-		 450.0f,  350.0f, 0.0f, 1.0f,	0.0f, 0.0f, 0.0f,	1.0f, 0.0f,
-		 450.0f,  200.0f, 0.0f, 1.0f,	0.0f, 0.0f, 0.0f,	1.0f, 1.0f,
-		 150.0f,  200.0f, 0.0f, 1.0f,	0.0f, 0.0f, 0.0f,	0.0f, 1.0f,
+		  // al doilea copac
+		   150.0f,  350.0f, 0.0f, 1.0f,	0.0f, 0.0f, 0.0f,	0.0f, 0.0f,
+		   450.0f,  350.0f, 0.0f, 1.0f,	0.0f, 0.0f, 0.0f,	1.0f, 0.0f,
+		   450.0f,  200.0f, 0.0f, 1.0f,	0.0f, 0.0f, 0.0f,	1.0f, 1.0f,
+		   150.0f,  200.0f, 0.0f, 1.0f,	0.0f, 0.0f, 0.0f,	0.0f, 1.0f,
 	};
 
 	//  Se creeaza / se leaga un VAO (Vertex Array Object) - util cand se utilizeaza mai multe VBO;
@@ -263,6 +264,8 @@ void RenderFunction(void)
 	matrTranslCarInv = glm::translate(glm::mat4(1.0f), glm::vec3(-tx1, -ty1, 0.0));		// masini invers
 	matrTranslCarT4 = glm::translate(glm::mat4(1.0f), glm::vec3(tx4, ty4, 0.0));// masini
 
+	matrScaleCars = glm::scale(glm::mat4(1.0f), glm::vec3(0.75f, 0.75f, 1.0f));
+
 	// Drum
 	myMatrix = resizeMatrix;
 	CreateVBO();
@@ -280,7 +283,7 @@ void RenderFunction(void)
 	LoadTexture("car1.png");
 	glActiveTexture(GL_TEXTURE0);
 	glBindTexture(GL_TEXTURE_2D, texture);
-	myMatrix = resizeMatrix * matrTranslCar * matrRot2 * matrTranslCarInv * matrTranslCarT4;
+	myMatrix = resizeMatrix * matrScaleCars * matrTranslCar * matrRot2 * matrTranslCarInv * matrTranslCarT4;
 	glUniform1i(glGetUniformLocation(ProgramId, "myTexture"), 0);
 	glUniformMatrix4fv(myMatrixLocation, 1, GL_FALSE, &myMatrix[0][0]);
 	glDrawArrays(GL_QUADS, 4, 4);
@@ -289,7 +292,7 @@ void RenderFunction(void)
 	LoadTexture("police.png");
 	glActiveTexture(GL_TEXTURE0);
 	glBindTexture(GL_TEXTURE_2D, texture);
-	myMatrix = resizeMatrix * matrTranslPolice;
+	myMatrix = resizeMatrix * matrScaleCars *  matrTranslPolice;
 	glUniform1i(glGetUniformLocation(ProgramId, "myTexture"), 0);
 	glUniformMatrix4fv(myMatrixLocation, 1, GL_FALSE, &myMatrix[0][0]);
 	glDrawArrays(GL_QUADS, 8, 4);
