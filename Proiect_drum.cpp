@@ -44,7 +44,7 @@ matrScaleCars;
 
 
 float tx = 0.0f; float ty = 100.0f;			//	Coordonatele de translatie ale patratului pe Ox si Oy;
-float tx1 = 100.0f; float ty1 = -240.0f;
+float tx1 = 100.0f; float ty1 = -340.0f;
 float tx2 = 300.0f; float ty2 = 30.0f;
 float tx3 = 0.0f;   float ty3 = 0.0f;
 float tx4 = 0.0f;   float ty4 = 0.0f;
@@ -75,26 +75,31 @@ void ProcessSpecialKeys(int key, int xx, int yy)
 {
 	float coefX = cos(glm::radians(angle1 + 90));
 	float coefY = sin(glm::radians(angle1 + 90));
+	if (ty1 <= -250) return;
+	if (ty1 >= 200) return;
 	switch (key)			//	Procesarea tastelor 'LEFT', 'RIGHT', 'UP', 'DOWN'
 	{						//	duce la deplasarea patratului pe axele Ox si Oy;
 	case GLUT_KEY_LEFT:
-		//if (ty1 > -150.0f)
-		if (tx1 < 270.0f or ty1 < 60.0f)
-		{
-			angle1 += 5;
-			coefX = cos(glm::radians(angle1 + 90));
-			coefY = sin(glm::radians(angle1 + 90));
-		}
-		break;
+		
+	{	
+			if (tx1 < 270.0f or ty1 < 60.0f)
+			{
+				angle1 += 5;
+				coefX = cos(glm::radians(angle1 + 90));
+				coefY = sin(glm::radians(angle1 + 90));
+			}
+	break;
+	}
 	case GLUT_KEY_RIGHT:
-		//if (ty1 > -150.0f)
-		if (tx1 < 270.0f or ty1 < 60.0f)
-		{
-			angle1 -= 5;
-			coefX = cos(glm::radians(angle1 + 90));
-			coefY = sin(glm::radians(angle1 + 90));
-		}
-		break;
+	{
+			if (tx1 < 270.0f or ty1 < 60.0f)
+			{
+				angle1 -= 5;
+				coefX = cos(glm::radians(angle1 + 90));
+				coefY = sin(glm::radians(angle1 + 90));
+			}
+	break;
+	}
 	case GLUT_KEY_UP:
 	{
 		ty4 += 5 * coefY;
@@ -151,35 +156,35 @@ void CreateVBO(void)
 {
 	//  Coordonatele varfurilor;
 	GLfloat Vertices[] = {
-		// drum
-		-400.0f, -500.0f, 0.0f, 1.0f,	0.0f, 0.0f, 0.0f,	0.0f, 0.0f,
-		 400.0f, -500.0f, 0.0f, 1.0f,	0.0f, 0.0f, 0.0f,	1.0f, 0.0f,
-		 400.0f,  500.0f, 0.0f, 1.0f,	0.0f, 0.0f, 0.0f,	1.0f, 1.0f,
-		-400.0f,  500.0f, 0.0f, 1.0f,	0.0f, 0.0f, 0.0f,	0.0f, 1.0f,
+		  // drum
+		 -400.0f, -500.0f, 0.0f, 1.0f,	0.0f, 0.0f, 0.0f,	0.0f, 0.0f,
+		  400.0f, -500.0f, 0.0f, 1.0f,	0.0f, 0.0f, 0.0f,	1.0f, 0.0f,
+		  400.0f,  500.0f, 0.0f, 1.0f,	0.0f, 0.0f, 0.0f,	1.0f, 1.0f,
+		 -400.0f,  500.0f, 0.0f, 1.0f,	0.0f, 0.0f, 0.0f,	0.0f, 1.0f,
 
-		// masina 
-		  25.0f, -300.0f, 0.0f, 1.0f,	0.0f, 0.0f, 0.0f,	0.0f, 0.0f,
-		 175.0f, -300.0f, 0.0f, 1.0f,	0.0f, 0.0f, 0.0f,	1.0f, 0.0f,
-		 175.0f, -180.0f, 0.0f, 1.0f,	0.0f, 0.0f, 0.0f,	1.0f, 1.0f,
-		  25.0f, -180.0f, 0.0f, 1.0f,	0.0f, 0.0f, 0.0f,	0.0f, 1.0f,
+		  // masina 
+		  25.0f, -400.0f, 0.0f, 1.0f,	0.0f, 0.0f, 0.0f,	0.0f, 0.0f,
+		  175.0f, -400.0f, 0.0f, 1.0f,	0.0f, 0.0f, 0.0f,	1.0f, 0.0f,
+		  175.0f, -280.0f, 0.0f, 1.0f,	0.0f, 0.0f, 0.0f,	1.0f, 1.0f,
+		  25.0f, -280.0f, 0.0f, 1.0f,	0.0f, 0.0f, 0.0f,	0.0f, 1.0f,
 
 		  // politie
-		  -300.0f, -160.0f, 0.0f, 1.0f,    0.0f, 0.0f, 0.0f,    0.0f, 0.0f,
-		  -100.0f, -160.0f, 0.0f, 1.0f,    0.0f, 0.0f, 0.0f,    1.0f, 0.0f,
-		  -100.0f,    0.0f, 0.0f, 1.0f,    0.0f, 0.0f, 0.0f,    1.0f, 1.0f,
-		  -300.0f,    0.0f, 0.0f, 1.0f,    0.0f, 0.0f, 0.0f,    0.0f, 1.0f,
+		 -300.0f, -160.0f, 0.0f, 1.0f,    0.0f, 0.0f, 0.0f,    0.0f, 0.0f,
+		 -100.0f, -160.0f, 0.0f, 1.0f,    0.0f, 0.0f, 0.0f,    1.0f, 0.0f,
+		 -100.0f,    0.0f, 0.0f, 1.0f,    0.0f, 0.0f, 0.0f,    1.0f, 1.0f,
+		 -300.0f,    0.0f, 0.0f, 1.0f,    0.0f, 0.0f, 0.0f,    0.0f, 1.0f,
 
 		  // primul copac
-		  -450.0f, -250.0f, 0.0f, 1.0f,	0.0f, 0.0f, 0.0f,	0.0f, 0.0f,
-		  -150.0f, -250.0f, 0.0f, 1.0f,	0.0f, 0.0f, 0.0f,	1.0f, 0.0f,
-		  -150.0f, -100.0f, 0.0f, 1.0f,	0.0f, 0.0f, 0.0f,	1.0f, 1.0f,
-		  -450.0f, -100.0f, 0.0f, 1.0f,	0.0f, 0.0f, 0.0f,	0.0f, 1.0f,
+		 -450.0f, -250.0f, 0.0f, 1.0f,	0.0f, 0.0f, 0.0f,	0.0f, 0.0f,
+		 -150.0f, -250.0f, 0.0f, 1.0f,	0.0f, 0.0f, 0.0f,	1.0f, 0.0f,
+		 -150.0f, -100.0f, 0.0f, 1.0f,	0.0f, 0.0f, 0.0f,	1.0f, 1.0f,
+		 -450.0f, -100.0f, 0.0f, 1.0f,	0.0f, 0.0f, 0.0f,	0.0f, 1.0f,
 
 		  // al doilea copac
-		   150.0f,  350.0f, 0.0f, 1.0f,	0.0f, 0.0f, 0.0f,	0.0f, 0.0f,
-		   450.0f,  350.0f, 0.0f, 1.0f,	0.0f, 0.0f, 0.0f,	1.0f, 0.0f,
-		   450.0f,  200.0f, 0.0f, 1.0f,	0.0f, 0.0f, 0.0f,	1.0f, 1.0f,
-		   150.0f,  200.0f, 0.0f, 1.0f,	0.0f, 0.0f, 0.0f,	0.0f, 1.0f,
+		  150.0f,  350.0f, 0.0f, 1.0f,	0.0f, 0.0f, 0.0f,	0.0f, 0.0f,
+		  450.0f,  350.0f, 0.0f, 1.0f,	0.0f, 0.0f, 0.0f,	1.0f, 0.0f,
+		  450.0f,  200.0f, 0.0f, 1.0f,	0.0f, 0.0f, 0.0f,	1.0f, 1.0f,
+		  150.0f,  200.0f, 0.0f, 1.0f,	0.0f, 0.0f, 0.0f,	0.0f, 1.0f,
 	};
 
 	//  Se creeaza / se leaga un VAO (Vertex Array Object) - util cand se utilizeaza mai multe VBO;
@@ -262,7 +267,7 @@ void RenderFunction(void)
 	matrTranslTree = glm::translate(glm::mat4(1.0f), glm::vec3(tx3, ty3, 0.0));			// copaci
 	matrRot2 = glm::rotate(glm::mat4(1.0f), glm::radians((float)angle1), glm::vec3(0.0f, 0.0f, 1.0f));	// rotatie
 	matrTranslCarInv = glm::translate(glm::mat4(1.0f), glm::vec3(-tx1, -ty1, 0.0));		// masini invers
-	matrTranslCarT4 = glm::translate(glm::mat4(1.0f), glm::vec3(tx4, ty4, 0.0));// masini
+	matrTranslCarT4 = glm::translate(glm::mat4(1.0f), glm::vec3(tx4, ty4, 0.0));// miscare masina
 
 	matrScaleCars = glm::scale(glm::mat4(1.0f), glm::vec3(0.75f, 0.75f, 1.0f));
 
@@ -292,7 +297,7 @@ void RenderFunction(void)
 	LoadTexture("police.png");
 	glActiveTexture(GL_TEXTURE0);
 	glBindTexture(GL_TEXTURE_2D, texture);
-	myMatrix = resizeMatrix * matrScaleCars *  matrTranslPolice;
+	myMatrix = resizeMatrix * matrScaleCars * matrTranslPolice;
 	glUniform1i(glGetUniformLocation(ProgramId, "myTexture"), 0);
 	glUniformMatrix4fv(myMatrixLocation, 1, GL_FALSE, &myMatrix[0][0]);
 	glDrawArrays(GL_QUADS, 8, 4);
@@ -318,11 +323,14 @@ void RenderFunction(void)
 	glutSwapBuffers();	//	Inlocuieste imaginea deseneata in fereastra cu cea randata; 
 
 	// Animatia de inceput
-	if (ty1 <= -150.0f)
+	if (ty1 <= -250) {
+		ty4 += 5;
 		ty1 += 5;
+	}
 
-	if (tx1 >= 270.0f and ty1 >= 60.0f) {
+	if (tx1 >= 80.0f and ty1 >= 200.0f and angle1 == 0) {
 		ty1 += 10;
+		ty4 += 10;
 		ty2 += 10;
 	}
 
