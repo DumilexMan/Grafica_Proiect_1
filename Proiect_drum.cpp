@@ -34,24 +34,22 @@ myMatrix,
 resizeMatrix,
 matrTranslRoad,
 matrTranslCar,
-matrTranslCarReverse,
 matrTranslPolice,
 matrTranslTree,
-matrRot2,
+matrRot,
 matrTranslCarInv,
 matrTranslCarT4,
 matrScaleCars;
 
 
 float tx = 0.0f; float ty = 100.0f;			//	Coordonatele de translatie ale patratului pe Ox si Oy;
-float tx1 = 100.0f; float ty1 = -340.0f;
-float tx2 = 300.0f; float ty2 = 30.0f;
-float tx3 = 0.0f;   float ty3 = 0.0f;
-float tx4 = 0.0f;   float ty4 = 0.0f;
+float tx1 = 100.0f; float ty1 = -340.0f;	// translatie masina
+float tx2 = 300.0f; float ty2 = 30.0f;		// translatie masina de politie
+float tx3 = 0.0f;   float ty3 = 0.0f;		// translatie copaci
+float tx4 = 0.0f;   float ty4 = 0.0f;		// miscare copaci
 float xMin = -400.f, xMax = 400.f, yMin = -300.f, yMax = 300.f;		//	Variabile pentru proiectia ortogonala;
 float coefx, coefy;
 float angle = 0;
-float angle1 = 0;
 int refreshMillis = 10;
 
 
@@ -74,8 +72,8 @@ void Move() {
 void ProcessSpecialKeys(int key, int xx, int yy)
 {
 	// Coeficienti folositi pentru a misca masina pe directia in care este orientata
-	float coefX = cos(glm::radians(angle1 + 90));
-	float coefY = sin(glm::radians(angle1 + 90));
+	float coefX = cos(glm::radians(angle + 90));
+	float coefY = sin(glm::radians(angle + 90));
 	if (ty1 <= -250) return;
 	if (ty1 >= 200) return;
 	switch (key)			//	Procesarea tastelor 'LEFT', 'RIGHT', 'UP', 'DOWN'
@@ -85,9 +83,9 @@ void ProcessSpecialKeys(int key, int xx, int yy)
 	{
 		if (tx1 < 270.0f or ty1 < 60.0f)
 		{
-			angle1 += 5;
-			coefX = cos(glm::radians(angle1 + 90));
-			coefY = sin(glm::radians(angle1 + 90));
+			angle += 5;
+			coefX = cos(glm::radians(angle + 90));
+			coefY = sin(glm::radians(angle + 90));
 		}
 		break;
 	}
@@ -95,9 +93,9 @@ void ProcessSpecialKeys(int key, int xx, int yy)
 	{
 		if (tx1 < 270.0f or ty1 < 60.0f)
 		{
-			angle1 -= 5;
-			coefX = cos(glm::radians(angle1 + 90));
-			coefY = sin(glm::radians(angle1 + 90));
+			angle -= 5;
+			coefX = cos(glm::radians(angle + 90));
+			coefY = sin(glm::radians(angle + 90));
 		}
 		break;
 	}
@@ -170,22 +168,22 @@ void CreateVBO(void)
 	   25.0f, -280.0f, 0.0f, 1.0f,	0.0f, 0.0f, 0.0f,	0.0f, 1.0f,
 
 	   // politie
-	  -300.0f, -160.0f, 0.0f, 1.0f,    0.0f, 0.0f, 0.0f,    0.0f, 0.0f,
-	  -100.0f, -160.0f, 0.0f, 1.0f,    0.0f, 0.0f, 0.0f,    1.0f, 0.0f,
-	  -100.0f,    0.0f, 0.0f, 1.0f,    0.0f, 0.0f, 0.0f,    1.0f, 1.0f,
-	  -300.0f,    0.0f, 0.0f, 1.0f,    0.0f, 0.0f, 0.0f,    0.0f, 1.0f,
+	   -300.0f, -160.0f, 0.0f, 1.0f,    0.0f, 0.0f, 0.0f,    0.0f, 0.0f,
+	   -100.0f, -160.0f, 0.0f, 1.0f,    0.0f, 0.0f, 0.0f,    1.0f, 0.0f,
+	   -100.0f,    0.0f, 0.0f, 1.0f,    0.0f, 0.0f, 0.0f,    1.0f, 1.0f,
+	   -300.0f,    0.0f, 0.0f, 1.0f,    0.0f, 0.0f, 0.0f,    0.0f, 1.0f,
 
-	  // primul copac
-	 -450.0f, -250.0f, 0.0f, 1.0f,	0.0f, 0.0f, 0.0f,	0.0f, 0.0f,
-	 -150.0f, -250.0f, 0.0f, 1.0f,	0.0f, 0.0f, 0.0f,	1.0f, 0.0f,
-	 -150.0f, -100.0f, 0.0f, 1.0f,	0.0f, 0.0f, 0.0f,	1.0f, 1.0f,
-	 -450.0f, -100.0f, 0.0f, 1.0f,	0.0f, 0.0f, 0.0f,	0.0f, 1.0f,
+	   // primul copac
+	   -450.0f, -250.0f, 0.0f, 1.0f,	0.0f, 0.0f, 0.0f,	0.0f, 0.0f,
+	   -150.0f, -250.0f, 0.0f, 1.0f,	0.0f, 0.0f, 0.0f,	1.0f, 0.0f,
+	   -150.0f, -100.0f, 0.0f, 1.0f,	0.0f, 0.0f, 0.0f,	1.0f, 1.0f,
+	   -450.0f, -100.0f, 0.0f, 1.0f,	0.0f, 0.0f, 0.0f,	0.0f, 1.0f,
 
-	 // al doilea copac
-	 150.0f,  350.0f, 0.0f, 1.0f,	0.0f, 0.0f, 0.0f,	0.0f, 0.0f,
-	 450.0f,  350.0f, 0.0f, 1.0f,	0.0f, 0.0f, 0.0f,	1.0f, 0.0f,
-	 450.0f,  200.0f, 0.0f, 1.0f,	0.0f, 0.0f, 0.0f,	1.0f, 1.0f,
-	 150.0f,  200.0f, 0.0f, 1.0f,	0.0f, 0.0f, 0.0f,	0.0f, 1.0f,
+	   // al doilea copac
+	   150.0f,  350.0f, 0.0f, 1.0f,	0.0f, 0.0f, 0.0f,	0.0f, 0.0f,
+	   450.0f,  350.0f, 0.0f, 1.0f,	0.0f, 0.0f, 0.0f,	1.0f, 0.0f,
+	   450.0f,  200.0f, 0.0f, 1.0f,	0.0f, 0.0f, 0.0f,	1.0f, 1.0f,
+	   150.0f,  200.0f, 0.0f, 1.0f,	0.0f, 0.0f, 0.0f,	0.0f, 1.0f,
 	};
 
 	//  Se creeaza / se leaga un VAO (Vertex Array Object) - util cand se utilizeaza mai multe VBO;
@@ -263,14 +261,12 @@ void RenderFunction(void)
 	//	Transformari
 	matrTranslRoad = glm::translate(glm::mat4(1.0f), glm::vec3(tx, ty, 0.0));			// drum
 	matrTranslCar = glm::translate(glm::mat4(1.0f), glm::vec3(tx1, ty1, 0.0));			// masini
-	matrTranslCarReverse = glm::translate(glm::mat4(1.0f), glm::vec3(-tx1, -ty1, 0.0));	// masini inversa
 	matrTranslPolice = glm::translate(glm::mat4(1.0f), glm::vec3(tx2, ty2, 0.0));		// masina politie
 	matrTranslTree = glm::translate(glm::mat4(1.0f), glm::vec3(tx3, ty3, 0.0));			// copaci
-	matrRot2 = glm::rotate(glm::mat4(1.0f), glm::radians((float)angle1), glm::vec3(0.0f, 0.0f, 1.0f));	// rotatie
-	matrTranslCarInv = glm::translate(glm::mat4(1.0f), glm::vec3(-tx1, -ty1, 0.0));		// masini invers
-	matrTranslCarT4 = glm::translate(glm::mat4(1.0f), glm::vec3(tx4, ty4, 0.0));// miscare masina
-
-	matrScaleCars = glm::scale(glm::mat4(1.0f), glm::vec3(0.75f, 0.75f, 1.0f));
+	matrRot = glm::rotate(glm::mat4(1.0f), glm::radians((float)angle), glm::vec3(0.0f, 0.0f, 1.0f));	// rotatie
+	matrTranslCarInv = glm::translate(glm::mat4(1.0f), glm::vec3(-tx1, -ty1, 0.0));		// masina inversa
+	matrTranslCarT4 = glm::translate(glm::mat4(1.0f), glm::vec3(tx4, ty4, 0.0));        // miscare masina
+	matrScaleCars = glm::scale(glm::mat4(1.0f), glm::vec3(0.75f, 0.75f, 1.0f));         // ambele masini
 
 	// Drum
 	myMatrix = resizeMatrix;
@@ -289,7 +285,7 @@ void RenderFunction(void)
 	LoadTexture("car1.png");
 	glActiveTexture(GL_TEXTURE0);
 	glBindTexture(GL_TEXTURE_2D, texture);
-	myMatrix = resizeMatrix * matrScaleCars * matrTranslCar * matrRot2 * matrTranslCarInv * matrTranslCarT4;
+	myMatrix = resizeMatrix * matrScaleCars * matrTranslCar * matrRot * matrTranslCarInv * matrTranslCarT4;
 	glUniform1i(glGetUniformLocation(ProgramId, "myTexture"), 0);
 	glUniformMatrix4fv(myMatrixLocation, 1, GL_FALSE, &myMatrix[0][0]);
 	glDrawArrays(GL_QUADS, 4, 4);
@@ -329,7 +325,7 @@ void RenderFunction(void)
 		ty1 += 5;
 	}
 
-	if (tx1 >= 80.0f and ty1 >= 200.0f and angle1 == 0) {
+	if (tx1 >= 80.0f and ty1 >= 200.0f and angle == 0) {
 		ty1 += 10;
 		ty4 += 10;
 		ty2 += 10;
